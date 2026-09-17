@@ -263,13 +263,49 @@ with st.sidebar:
     else:
         st.info("🟡 Yerel Yedek Veri Devrede", icon="ℹ️")
 
-    # Öğrenci Seçimi
+    # URL Parametresi & Veli Kilit Modu Kontrolü
+    raw_params = {}
+    try:
+        if hasattr(st, "query_params"):
+            raw_params = st.query_params
+        elif hasattr(st, "experimental_get_query_params"):
+            raw_params = st.experimental_get_query_params()
+    except Exception:
+        raw_params = {}
+
+    url_student_param = None
+    for param_key in ["ogrenci", "öğrenci", "student"]:
+        if param_key in raw_params:
+            val = raw_params[param_key]
+            if isinstance(val, list) and len(val) > 0:
+                url_student_param = str(val[0]).strip()
+            elif isinstance(val, str):
+                url_student_param = val.strip()
+            if url_student_param:
+                break
+
+    # Öğrenci Seçimi ve Yetkilendirme
     students = sorted(df["Öğrenci"].dropna().unique().tolist()) if "Öğrenci" in df.columns else ["Asya", "Utku"]
-    selected_student = st.selectbox(
-        "👤 Öğrenci Seçiniz",
-        options=students,
-        index=0
-    )
+
+    if url_student_param:
+        # Veli Modu: URL'den gelen öğrenciye kilitlenir, selectbox gizlenir
+        matched_student = None
+        for s in students:
+            if s.lower() == url_student_param.lower():
+                matched_student = s
+                break
+        selected_student = matched_student if matched_student else url_student_param
+        is_parent_mode = True
+
+        st.success(f"👤 Öğrenci: **{selected_student}** (Veli Modu)", icon="🔒")
+    else:
+        # Yönetici Modu: Tüm öğrencileri seçebilen selectbox
+        is_parent_mode = False
+        selected_student = st.selectbox(
+            "👤 Öğrenci Seçiniz",
+            options=students,
+            index=0
+        )
 
     st.markdown("---")
 
@@ -293,16 +329,27 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-    # Güncel Birleştirilmiş CSV İndirme Butonu
-    csv_data = df.to_csv(index=False, encoding="utf-8-sig")
-    st.download_button(
-        label="📥 Güncel Veriyi İndir (CSV)",
-        data=csv_data,
-        file_name="ogrenci_verileri.csv",
-        mime="text/csv",
-        use_container_width=True,
-        help="Asya, Utku ve İpek dahil tüm öğrencilerin güncel tablosunu CSV olarak indirir."
-    )
+    # CSV İndirme Butonu (Veli modunda gizlilik için sadece o öğrenci, yönetici modunda tüm liste)
+    if is_parent_mode:
+        csv_data = student_records.to_csv(index=False, encoding="utf-8-sig")
+        st.download_button(
+            label=f"📥 {selected_student} Verisini İndir (CSV)",
+            data=csv_data,
+            file_name=f"{selected_student}_verileri.csv",
+            mime="text/csv",
+            use_container_width=True,
+            help=f"{selected_student} öğrencisinin güncel tablosunu CSV olarak indirir."
+        )
+    else:
+        csv_data = df.to_csv(index=False, encoding="utf-8-sig")
+        st.download_button(
+            label="📥 Güncel Veriyi İndir (CSV)",
+            data=csv_data,
+            file_name="ogrenci_verileri.csv",
+            mime="text/csv",
+            use_container_width=True,
+            help="Asya, Utku ve İpek dahil tüm öğrencilerin güncel tablosunu CSV olarak indirir."
+        )
 
     st.markdown("""
         <div class="info-box">
