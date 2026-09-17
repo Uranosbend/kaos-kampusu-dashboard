@@ -1,0 +1,94 @@
+﻿Öğrenci,Sınıf,Ders,Ana Ünite,Konu,Stratejik Önem,Durum,Ustalık Oranı (%)
+Asya,7,Matematik,Sayılar ve İşlemler,Tam Sayılarla İşlemler,Temel,Başlamadı,0
+Asya,7,Matematik,Sayılar ve İşlemler,Rasyonel Sayılar ve İşlemler,Kritik,Başlamadı,0
+Asya,7,Matematik,Cebir,Cebirsel İfadeler,Kritik,Başlamadı,0
+Asya,7,Matematik,Cebir,Eşitlik ve Denklem,Kritik,Başlamadı,0
+Asya,7,Matematik,Orantı,Oran ve Orantı,Kritik,Başlamadı,0
+Asya,7,Matematik,Yüzdeler,Yüzdeler,Orta,Başlamadı,0
+Asya,7,Matematik,Geometri,Doğrular ve Açılar,Temel,Başlamadı,0
+Asya,7,Matematik,Geometri,Çokgenler,Orta,Başlamadı,0
+Asya,7,Matematik,Geometri,Çember ve Daire,Orta,Başlamadı,0
+Asya,7,Matematik,Veri,Veri Analizi,Temel,Başlamadı,0
+Asya,7,Fen Bilimleri,Uzay,Güneş Sistemi ve Ötesi,Temel,Başlamadı,0
+Asya,7,Fen Bilimleri,Canlılar,Hücre ve Bölünmeler,Kritik,Başlamadı,0
+Asya,7,Fen Bilimleri,Fiziksel Olaylar,Kuvvet ve Enerji,Kritik,Başlamadı,0
+Asya,7,Fen Bilimleri,Madde,Saf Madde ve Karışımlar,Kritik,Başlamadı,0
+Asya,7,Fen Bilimleri,Fiziksel Olaylar,Işığın Madde ile Etkileşimi,Orta,Başlamadı,0
+Asya,7,Fen Bilimleri,Canlılar,Canlılarda Üreme Büyüme ve Gelişme,Orta,Başlamadı,0
+Asya,7,Fen Bilimleri,Fiziksel Olaylar,Elektrik Devreleri,Kritik,Başlamadı,0
+Utku,8,Matematik,Sayılar,Çarpanlar ve Katlar,Kritik,Başlamadı,0
+Utku,8,Matematik,Sayılar,Üslü İfadeler,Kritik,Başlamadı,0
+Utku,8,Matematik,Sayılar,Kareköklü İfadeler,Kritik,Başlamadı,0
+Utku,8,Matematik,Veri,Veri Analizi,Orta,Başlamadı,0
+Utku,8,Matematik,Olasılık,Basit Olayların Olma Olasılığı,Orta,Başlamadı,0
+Utku,8,Matematik,Cebir,Cebirsel İfadeler ve Özdeşlikler,Kritik,Başlamadı,0
+Utku,8,Matematik,Cebir,Doğrusal Denklemler,Kritik,Başlamadı,0
+Utku,8,Matematik,Cebir,Eşitsizlikler,Kritik,Başlamadı,0
+Utku,8,Matematik,Geometri,Üçgenler,Orta,Başlamadı,0
+Utku,8,Matematik,Geometri,Eşlik ve Benzerlik,Orta,Başlamadı,0
+Utku,8,Matematik,Geometri,Dönüşüm Geometrisi,Temel,Başlamadı,0
+Utku,8,Matematik,Geometri,Geometrik Cisimler,Temel,Başlamadı,0
+Utku,8,Fen Bilimleri,Dünya ve Evren,Mevsimler ve İklim,Temel,Başlamadı,0
+Utku,8,Fen Bilimleri,Canlılar,DNA ve Genetik Kod,Kritik,Başlamadı,0
+Utku,8,Fen Bilimleri,Fiziksel Olaylar,Basınç,Kritik,Başlamadı,0
+Utku,8,Fen Bilimleri,Madde,Madde ve Endüstri,Kritik,Başlamadı,0
+Utku,8,Fen Bilimleri,Fiziksel Olaylar,Basit Makineler,Kritik,Başlamadı,0
+Utku,8,Fen Bilimleri,Canlılar,Enerji Dönüşümleri ve Çevre,Kritik,Başlamadı,0
+Utku,8,Fen Bilimleri,Fiziksel Olaylar,Elektrik Yükleri ve Elektrik Enerjisi,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılar,4-5-6 Basamaklı Doğal Sayılar ve Okunuşları,Temel,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılar,Basamak ve Bölük Kavramı ile Basamak Değeri,Kritik,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılar,En Yakın Onluğa ve Yüzlüğe Yuvarlama,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılar,Doğal Sayıları Sıralama ve Karşılaştırma,Temel,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılar,Sayı ve Şekil Örüntüleri,Temel,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Toplama İşlemi,Kritik,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Çıkarma İşlemi,Kritik,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,Zihinden Toplama ve Çıkarma İşlemleri,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,Toplama ve Çıkarma Problemleri,Kritik,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,En Çok Üç Basamaklı Sayılarla Çarpma İşlemi,Kritik,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,10-100-1000 ile Kısa Yoldan ve Zihinden Çarpma,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,En Çok Dört Basamaklı Sayılarla Bölme İşlemi,Kritik,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,10-100-1000 ile Zihinden Bölme İşlemi,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,Bölme İşleminde Kalan ve Tahmin,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılarla İşlemler,Dört İşlem İçeren Karma Problemler,Kritik,Başlamadı,0
+İpek,4,Matematik,Kesirler,Basit-Bileşik ve Tam Sayılı Kesirler,Kritik,Başlamadı,0
+İpek,4,Matematik,Kesirler,Bir Çokluğun Kesir Kadarını Bulma,Kritik,Başlamadı,0
+İpek,4,Matematik,Kesirler,Paydaları Eşit Kesirleri Sıralama,Orta,Başlamadı,0
+İpek,4,Matematik,Kesirler,Paydaları Eşit Kesirlerle Toplama ve Çıkarma,Kritik,Başlamadı,0
+İpek,4,Matematik,Kesirler,Kesir Problemleri,Kritik,Başlamadı,0
+İpek,4,Matematik,Zaman ve Veri,Zaman Ölçme Birimleri ve Dönüşümleri,Orta,Başlamadı,0
+İpek,4,Matematik,Zaman ve Veri,Zaman Ölçme Problemleri,Orta,Başlamadı,0
+İpek,4,Matematik,Zaman ve Veri,Sütun Grafiği ve Tablo Yorumlama,Kritik,Başlamadı,0
+İpek,4,Matematik,Geometri,Açılar ve Açı Çeşitleri,Orta,Başlamadı,0
+İpek,4,Matematik,Geometri,Üçgen-Kare ve Dikdörtgenin Özellikleri,Temel,Başlamadı,0
+İpek,4,Matematik,Geometri,Kenarlarına Göre Üçgen Çeşitleri,Temel,Başlamadı,0
+İpek,4,Matematik,Ölçme,Uzunluk Ölçme ve Birim Dönüşümleri,Orta,Başlamadı,0
+İpek,4,Matematik,Ölçme,Kare ve Dikdörtgenin Çevre Uzunluğu,Kritik,Başlamadı,0
+İpek,4,Matematik,Ölçme,Birimkare ile Alan Hesaplama,Kritik,Başlamadı,0
+İpek,4,Matematik,Ölçme,Sıvı Ölçme ve Litre-Mililitre Problemleri,Orta,Başlamadı,0
+İpek,4,Matematik,Ölçme,Kütle Ölçme ve Ton-Kilogram-Gram Dönüşümleri,Temel,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Metinde Ana Fikir ve Ana Duygu,Kritik,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Metnin Konusu ve Başlık İlişkisi,Kritik,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Paragrafta Anlam ve Yardımcı Düşünceler,Kritik,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Metinle İlgili 5N1K Soruları,Kritik,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Metnin Olay Örgüsü-Kişiler-Yer ve Zaman,Kritik,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Görsel Okuma ve Tablo-Grafik Yorumlama,Kritik,Başlamadı,0
+İpek,4,Türkçe,Okuma ve Anlama,Metin Türleri ve Şiir,Orta,Başlamadı,0
+İpek,4,Türkçe,Sözcükte Anlam,Gerçek-Mecaz ve Terim Anlam,Kritik,Başlamadı,0
+İpek,4,Türkçe,Sözcükte Anlam,Eş Anlamlı ve Zıt Anlamlı Sözcükler,Orta,Başlamadı,0
+İpek,4,Türkçe,Sözcükte Anlam,Eş Sesli (Sesteş) Sözcükler,Orta,Başlamadı,0
+İpek,4,Türkçe,Sözcükte Anlam,Deyimler ve Atasözleri,Kritik,Başlamadı,0
+İpek,4,Türkçe,Cümlede Anlam,Sebep-Sonuç ve Amaç-Sonuç Cümleleri,Kritik,Başlamadı,0
+İpek,4,Türkçe,Cümlede Anlam,Öznel ve Nesnel Yargılar,Kritik,Başlamadı,0
+İpek,4,Türkçe,Cümlede Anlam,Karşılaştırma ve Benzetme Cümleleri,Orta,Başlamadı,0
+İpek,4,Türkçe,Cümlede Anlam,Duygusal ve Abartılı İfadeler,Temel,Başlamadı,0
+İpek,4,Türkçe,Yazım Kuralları,Büyük Harflerin Kullanıldığı Yerler,Kritik,Başlamadı,0
+İpek,4,Türkçe,Yazım Kuralları,de ve ki Bağlaçlarının Yazımı,Kritik,Başlamadı,0
+İpek,4,Türkçe,Yazım Kuralları,mi Soru Ekinin Yazımı,Kritik,Başlamadı,0
+İpek,4,Türkçe,Yazım Kuralları,Sayıların ve Kısaltmaların Yazımı,Orta,Başlamadı,0
+İpek,4,Türkçe,Yazım Kuralları,Yazımı Karıştırılan Sözcükler,Orta,Başlamadı,0
+İpek,4,Türkçe,Noktalama İşaretleri,Nokta-Virgül ve İki Nokta,Kritik,Başlamadı,0
+İpek,4,Türkçe,Noktalama İşaretleri,Soru ve Ünlem İşaretleri,Orta,Başlamadı,0
+İpek,4,Türkçe,Noktalama İşaretleri,Kesme-Tırnak ve Kısa Çizgi,Kritik,Başlamadı,0
+İpek,4,Türkçe,Dil Bilgisi,Kök ve Ek Kavramı (Yapım Ekleri),Orta,Başlamadı,0
+İpek,4,Türkçe,Dil Bilgisi,Basit ve Türemiş Sözcükler,Temel,Başlamadı,0
+İpek,4,Türkçe,Dil Bilgisi,Kurallı ve Devrik Cümle,Temel,Başlamadı,0
