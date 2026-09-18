@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import os
+import urllib.parse
 from datetime import datetime
 
 # ---------------------------------------------------------
@@ -44,7 +45,7 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 18px;
         padding: 24px 30px;
-        margin-bottom: 24px;
+        margin-bottom: 22px;
         box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(14px);
     }
@@ -64,6 +65,35 @@ st.markdown("""
         color: #94a3b8;
         font-size: 14px;
         margin: 0;
+    }
+
+    /* Tabs Tasarımı */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px;
+        background-color: rgba(15, 23, 42, 0.7);
+        padding: 8px 12px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 24px;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 48px;
+        border-radius: 12px;
+        color: #94a3b8;
+        font-weight: 700;
+        font-size: 15px;
+        padding: 0 24px;
+        border: 1px solid transparent !important;
+        background-color: transparent;
+        transition: all 0.25s ease;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(99, 102, 241, 0.22) 100%) !important;
+        color: #38bdf8 !important;
+        border: 1px solid rgba(56, 189, 248, 0.4) !important;
+        box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
     }
 
     /* KPI Kart Tasarımları */
@@ -135,6 +165,16 @@ st.markdown("""
         color: #38bdf8;
         border: 1px solid rgba(56, 189, 248, 0.35);
     }
+    .badge-success {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .badge-warning {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+    }
 
     /* Veli Bilgi Kartı */
     .info-box {
@@ -147,18 +187,56 @@ st.markdown("""
         font-size: 13px;
         line-height: 1.6;
     }
+
+    /* Görev Kartı Tasarımları */
+    .task-card {
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 16, 29, 0.95) 100%);
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: all 0.25s ease;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.6);
+    }
+    .task-card-pending {
+        border-left: 5px solid #f59e0b !important;
+        border-color: rgba(245, 158, 11, 0.25);
+    }
+    .task-card-completed {
+        border-left: 5px solid #10b981 !important;
+        border-color: rgba(16, 185, 129, 0.25);
+    }
+    .task-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    .task-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# CANLI GOOGLE SHEETS VERİ ENTEGRASYONU
+# CANLI GOOGLE SHEETS VERİ ENTEGRASYONU (MÜFREDAT)
 # ---------------------------------------------------------
 LIVE_SHEET_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/export?format=csv"
 LOCAL_BACKUP_CSV = os.path.join(os.path.dirname(__file__), "ogrenci_verileri.csv")
 
 def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Tablo sütunlarını eşleştirir ve standart hale getirir."""
+    """Müfredat tablosu sütunlarını standart hale getirir."""
     if len(df.columns) == 8:
         df.columns = ["Öğrenci", "Sınıf", "Ders", "Ana Ünite", "Konu", "Stratejik Önem", "Durum", "Ustalık Oranı (%)"]
     else:
@@ -189,7 +267,7 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
 @st.cache_data(ttl=60)
 def fetch_data():
     """
-    Canlı Google E-Tablo'dan veriyi çeker.
+    Canlı Google E-Tablo'dan müfredat verisini çeker.
     Her 60 saniyede bir veya yenile butonuna tıklandığında otomatik güncellenir.
     """
     is_live = False
@@ -197,7 +275,7 @@ def fetch_data():
         df_live = pd.read_csv(LIVE_SHEET_URL, encoding="utf-8")
         df_live = normalize_columns(df_live)
         
-        # Eğer yerel dosyada canlı tabloda henüz yer almayan öğrenci kayıtları varsa koru ve birleştir
+        # Yerel dosyada olup canlıda olmayan öğrenci kayıtlarını birleştir
         if os.path.exists(LOCAL_BACKUP_CSV):
             df_local = pd.read_csv(LOCAL_BACKUP_CSV, encoding="utf-8-sig")
             df_local = normalize_columns(df_local)
@@ -214,7 +292,6 @@ def fetch_data():
             df = df_live
 
         is_live = True
-        # Canlı veriyi ve yeni eklenen kayıtları yerel yedek dosyasına kaydet
         df.to_csv(LOCAL_BACKUP_CSV, index=False, encoding="utf-8-sig")
     except Exception:
         if os.path.exists(LOCAL_BACKUP_CSV):
@@ -223,7 +300,6 @@ def fetch_data():
         else:
             df = pd.DataFrame()
 
-    # Sayısal ve metin düzenlemeleri
     if not df.empty:
         if "Ustalık Oranı (%)" in df.columns:
             df["Ustalık Oranı (%)"] = (
@@ -242,7 +318,78 @@ def fetch_data():
 
     return df, is_live
 
+
+# ---------------------------------------------------------
+# CANLI GOOGLE SHEETS VERİ ENTEGRASYONU (GÖREVLER & ÖDEVLER)
+# ---------------------------------------------------------
+LIVE_TASKS_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/gviz/tq?tqx=out:csv&sheet=G%C3%B6revler"
+LOCAL_TASKS_CSV = os.path.join(os.path.dirname(__file__), "gorevler_verileri.csv")
+
+@st.cache_data(ttl=60)
+def fetch_tasks_data():
+    """
+    Canlı Google E-Tablo 'Görevler' sayfasından ödev ve görev verilerini çeker.
+    Eğer canlı veride henüz satır girilmemişse veya ulaşılamazsa yerel yedeği kullanır.
+    """
+    is_live = False
+    df_tasks = pd.DataFrame()
+    try:
+        df_live = pd.read_csv(LIVE_TASKS_URL, encoding="utf-8")
+        df_live.columns = df_live.columns.str.strip()
+        
+        if len(df_live) > 0:
+            df_tasks = df_live
+            is_live = True
+            df_tasks.to_csv(LOCAL_TASKS_CSV, index=False, encoding="utf-8-sig")
+        else:
+            # Canlı tablo boşsa yerel yedeği kullan
+            if os.path.exists(LOCAL_TASKS_CSV):
+                df_tasks = pd.read_csv(LOCAL_TASKS_CSV, encoding="utf-8")
+            is_live = True
+    except Exception:
+        if os.path.exists(LOCAL_TASKS_CSV):
+            df_tasks = pd.read_csv(LOCAL_TASKS_CSV, encoding="utf-8")
+        else:
+            df_tasks = pd.DataFrame(columns=["Tarih", "Ogrenci", "Gorev Tipi", "Konu ve Hedef", "Durum", "Gorev"])
+
+    # Sütun isimlerini standartlaştır
+    if not df_tasks.empty:
+        col_rename = {}
+        for col in df_tasks.columns:
+            c = col.lower()
+            if "tarih" in c:
+                col_rename[col] = "Tarih"
+            elif "ogrenci" in c or "öğrenci" in c:
+                col_rename[col] = "Ogrenci"
+            elif "tip" in c:
+                col_rename[col] = "Gorev Tipi"
+            elif "konu" in c or "hedef" in c:
+                col_rename[col] = "Konu ve Hedef"
+            elif "durum" in c:
+                col_rename[col] = "Durum"
+            elif "gorev" in c or "görev" in c:
+                col_rename[col] = "Gorev"
+        if col_rename:
+            df_tasks = df_tasks.rename(columns=col_rename)
+
+        if "Durum" in df_tasks.columns:
+            df_tasks["Durum"] = df_tasks["Durum"].fillna("Bekliyor").astype(str).str.strip()
+        if "Ogrenci" in df_tasks.columns:
+            df_tasks["Ogrenci"] = df_tasks["Ogrenci"].fillna("").astype(str).str.strip()
+        if "Tarih" in df_tasks.columns:
+            df_tasks["Tarih"] = df_tasks["Tarih"].fillna("").astype(str).str.strip()
+        if "Gorev Tipi" in df_tasks.columns:
+            df_tasks["Gorev Tipi"] = df_tasks["Gorev Tipi"].fillna("Genel Görev").astype(str).str.strip()
+        if "Konu ve Hedef" in df_tasks.columns:
+            df_tasks["Konu ve Hedef"] = df_tasks["Konu ve Hedef"].fillna("Belirtilmedi").astype(str).str.strip()
+        if "Gorev" in df_tasks.columns:
+            df_tasks["Gorev"] = df_tasks["Gorev"].fillna("-").astype(str).str.strip()
+
+    return df_tasks, is_live
+
 df, is_live_connected = fetch_data()
+df_tasks, is_tasks_live_connected = fetch_tasks_data()
+
 
 # ---------------------------------------------------------
 # SIDEBAR (SOL MENÜ & FİLTRELER)
@@ -258,7 +405,9 @@ with st.sidebar:
     st.markdown("---")
 
     # Canlı Bağlantı Rozeti
-    if is_live_connected:
+    if is_live_connected and is_tasks_live_connected:
+        st.success("🟢 Canlı Google Sheet Bağlı (Müfredat & Görevler)", icon="✅")
+    elif is_live_connected:
         st.success("🟢 Canlı Google Sheet Bağlı", icon="✅")
     else:
         st.info("🟡 Yerel Yedek Veri Devrede", icon="ℹ️")
@@ -285,10 +434,10 @@ with st.sidebar:
                 break
 
     # Öğrenci Seçimi ve Yetkilendirme
-    students = sorted(df["Öğrenci"].dropna().unique().tolist()) if "Öğrenci" in df.columns else ["Asya", "Utku"]
+    students = sorted(df["Öğrenci"].dropna().unique().tolist()) if "Öğrenci" in df.columns and not df.empty else ["Asya", "Utku"]
 
     if url_student_param:
-        # Veli Modu: URL'den gelen öğrenciye kilitlenir, selectbox gizlenir
+        # Veli Modu: URL'den gelen öğrenciye kilitlenir, selectbox kilitlenir
         matched_student = None
         for s in students:
             if s.lower() == url_student_param.lower():
@@ -309,18 +458,16 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # Ders Filtresi
-    student_records = df[df["Öğrenci"] == selected_student]
+    # Müfredat Filtreleri
+    student_records = df[df["Öğrenci"] == selected_student] if "Öğrenci" in df.columns else pd.DataFrame()
     courses = ["Tümü"] + sorted(student_records["Ders"].dropna().unique().tolist()) if "Ders" in student_records.columns else ["Tümü"]
-    selected_course = st.selectbox("📚 Ders Filtresi", options=courses)
+    selected_course = st.selectbox("📚 Ders Filtresi (Müfredat)", options=courses)
 
-    # Stratejik Önem Filtresi
     strategic_list = ["Tümü", "Kritik", "Orta", "Temel"]
     selected_strategic = st.selectbox("🎯 Stratejik Önem Filtresi", options=strategic_list)
 
-    # Durum Filtresi
     statuses = ["Tümü", "Başlamadı", "Devam Ediyor", "Tamamlandı"]
-    selected_status = st.selectbox("⚡ Konu Durumu", options=statuses)
+    selected_status = st.selectbox("⚡ Konu Durumu (Müfredat)", options=statuses)
 
     st.markdown("---")
 
@@ -329,48 +476,48 @@ with st.sidebar:
         st.cache_data.clear()
         st.rerun()
 
-    # CSV İndirme Butonu (Veli modunda gizlilik için sadece o öğrenci, yönetici modunda tüm liste)
+    # CSV İndirme Butonu
     if is_parent_mode:
         csv_data = student_records.to_csv(index=False, encoding="utf-8-sig")
         st.download_button(
-            label=f"📥 {selected_student} Verisini İndir (CSV)",
+            label=f"📥 {selected_student} Müfredatını İndir (CSV)",
             data=csv_data,
             file_name=f"{selected_student}_verileri.csv",
             mime="text/csv",
             use_container_width=True,
-            help=f"{selected_student} öğrencisinin güncel tablosunu CSV olarak indirir."
+            help=f"{selected_student} öğrencisinin güncel müfredat tablosunu CSV olarak indirir."
         )
     else:
         csv_data = df.to_csv(index=False, encoding="utf-8-sig")
         st.download_button(
-            label="📥 Güncel Veriyi İndir (CSV)",
+            label="📥 Güncel Müfredatı İndir (CSV)",
             data=csv_data,
             file_name="ogrenci_verileri.csv",
             mime="text/csv",
             use_container_width=True,
-            help="Asya, Utku ve İpek dahil tüm öğrencilerin güncel tablosunu CSV olarak indirir."
+            help="Tüm öğrencilerin güncel tablosunu CSV olarak indirir."
         )
 
     st.markdown("""
         <div class="info-box">
-            📌 <b>Canlı Senkronizasyon:</b> Google E-Tablo'nuza girdiğiniz her yeni konu durumu veli paneline otomatik olarak yansır.
+            📌 <b>Canlı Senkronizasyon:</b> Google E-Tablo'ya eklenen tüm yeni konu ve ödev durumları panele otomatik olarak yansır.
         </div>
     """, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# VERİ HESAPLAMALARI & METRİKLER
+# MÜFREDAT HESAPLAMALARI & METRİKLER
 # ---------------------------------------------------------
-student_df = df[df["Öğrenci"] == selected_student].copy()
+student_df = df[df["Öğrenci"] == selected_student].copy() if "Öğrenci" in df.columns else pd.DataFrame()
 
-# Filtrelenmiş Tablo Verisi
 filtered_df = student_df.copy()
-if selected_course != "Tümü":
-    filtered_df = filtered_df[filtered_df["Ders"] == selected_course]
-if selected_strategic != "Tümü":
-    filtered_df = filtered_df[filtered_df["Stratejik Önem"] == selected_strategic]
-if selected_status != "Tümü":
-    filtered_df = filtered_df[filtered_df["Durum"] == selected_status]
+if not filtered_df.empty:
+    if selected_course != "Tümü" and "Ders" in filtered_df.columns:
+        filtered_df = filtered_df[filtered_df["Ders"] == selected_course]
+    if selected_strategic != "Tümü" and "Stratejik Önem" in filtered_df.columns:
+        filtered_df = filtered_df[filtered_df["Stratejik Önem"] == selected_strategic]
+    if selected_status != "Tümü" and "Durum" in filtered_df.columns:
+        filtered_df = filtered_df[filtered_df["Durum"] == selected_status]
 
 # Sınıf Bilgisi
 raw_grade = student_df["Sınıf"].iloc[0] if not student_df.empty and "Sınıf" in student_df.columns else "8"
@@ -383,23 +530,20 @@ else:
     sub_grade_label = "Ortaokul Müfredatı"
 
 total_topics = len(student_df)
-# Dinamik ders konu dağılımı
 course_counts = student_df["Ders"].value_counts().to_dict() if "Ders" in student_df.columns else {}
 courses_summary = " • ".join([f"{c} ({cnt} Konu)" for c, cnt in course_counts.items()]) if course_counts else "Müfredat"
 delta_course_summary = " • ".join([f"{cnt} {c}" for c, cnt in course_counts.items()]) if course_counts else "Dersler"
 
-completed_topics = len(student_df[student_df["Durum"] == "Tamamlandı"])
-in_progress_topics = len(student_df[student_df["Durum"] == "Devam Ediyor"])
-not_started_topics = len(student_df[student_df["Durum"] == "Başlamadı"])
+completed_topics = len(student_df[student_df["Durum"] == "Tamamlandı"]) if not student_df.empty and "Durum" in student_df.columns else 0
+in_progress_topics = len(student_df[student_df["Durum"] == "Devam Ediyor"]) if not student_df.empty and "Durum" in student_df.columns else 0
+not_started_topics = len(student_df[student_df["Durum"] == "Başlamadı"]) if not student_df.empty and "Durum" in student_df.columns else 0
 
-completed_df = student_df[student_df["Durum"] == "Tamamlandı"]
-avg_mastery = round(completed_df["Ustalık Oranı (%)"].mean(), 1) if not completed_df.empty else 0.0
+completed_df = student_df[student_df["Durum"] == "Tamamlandı"] if not student_df.empty and "Durum" in student_df.columns else pd.DataFrame()
+avg_mastery = round(completed_df["Ustalık Oranı (%)"].mean(), 1) if not completed_df.empty and "Ustalık Oranı (%)" in completed_df.columns else 0.0
 completion_rate = round((completed_topics / total_topics * 100), 1) if total_topics > 0 else 0
 
-# Kritik Konu Sayısı
-critical_df = student_df[student_df["Stratejik Önem"] == "Kritik"]
+critical_df = student_df[student_df["Stratejik Önem"] == "Kritik"] if not student_df.empty and "Stratejik Önem" in student_df.columns else pd.DataFrame()
 total_critical = len(critical_df)
-completed_critical = len(critical_df[critical_df["Durum"] == "Tamamlandı"])
 
 
 # ---------------------------------------------------------
@@ -424,240 +568,386 @@ st.markdown(f"""
 
 
 # ---------------------------------------------------------
-# KPI METRİK KARTLARI (3 KOLON)
+# ANA SEKMELER (MÜFREDAT VE AKTİF GÖREVLER)
 # ---------------------------------------------------------
-col1, col2, col3 = st.columns(3)
+tab_mufredat, tab_gorevler = st.tabs([
+    "📊 Müfredat ve İlerleme",
+    "📚 Aktif Görevler ve Ödevler"
+])
 
-with col1:
-    st.metric(
-        label="Öğrencinin Sınıfı",
-        value=f"{grade_label}",
-        delta=sub_grade_label
-    )
 
-with col2:
-    st.metric(
-        label="Toplam Konu Sayısı",
-        value=f"{total_topics} Konu",
-        delta=delta_course_summary
-    )
+# =========================================================
+# SEKME 1: MÜFREDAT VE İLERLEME
+# =========================================================
+with tab_mufredat:
+    # KPI Metrik Kartları
+    col1, col2, col3 = st.columns(3)
 
-with col3:
-    if completed_topics == 0:
+    with col1:
         st.metric(
-            label="Tamamlanan Konu Sayısı",
-            value="0 Konu",
-            delta="Ders Başlangıç Seviyesi"
-        )
-    else:
-        st.metric(
-            label="Tamamlanan Konu Sayısı",
-            value=f"{completed_topics} Konu",
-            delta=f"%{completion_rate} Tamamlanma Oranı"
+            label="Öğrencinin Sınıfı",
+            value=f"{grade_label}",
+            delta=sub_grade_label
         )
 
-st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
+    with col2:
+        st.metric(
+            label="Toplam Konu Sayısı",
+            value=f"{total_topics} Konu",
+            delta=delta_course_summary
+        )
 
+    with col3:
+        if completed_topics == 0:
+            st.metric(
+                label="Tamamlanan Konu Sayısı",
+                value="0 Konu",
+                delta="Ders Başlangıç Seviyesi"
+            )
+        else:
+            st.metric(
+                label="Tamamlanan Konu Sayısı",
+                value=f"{completed_topics} Konu",
+                delta=f"%{completion_rate} Tamamlanma Oranı"
+            )
 
-# ---------------------------------------------------------
-# PREMİUM GRAFİKLER (PLOTLY)
-# ---------------------------------------------------------
-g_col1, g_col2 = st.columns([1, 1])
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
-# --- GRAFİK 1: GAUGE (USTALIK ORANI) ---
-with g_col1:
-    st.markdown("""
-        <div class="chart-container">
-            <div class="chart-header">
-                <span>⚡ Genel Ustalık Oranı Ortalaması</span>
-            </div>
-    """, unsafe_allow_html=True)
+    # Grafikler
+    g_col1, g_col2 = st.columns([1, 1])
 
-    fig_gauge = go.Figure(go.Indicator(
-        mode="gauge+number",
-        value=avg_mastery,
-        domain={'x': [0, 1], 'y': [0, 1]},
-        number={'suffix': "%", 'font': {'size': 44, 'color': '#ffffff', 'family': 'Plus Jakarta Sans'}},
-        gauge={
-            'axis': {'range': [0, 100], 'tickwidth': 2, 'tickcolor': "#475569", 'tickfont': {'color': '#94a3b8'}},
-            'bar': {'color': "#38bdf8", 'thickness': 0.28},
-            'bgcolor': "rgba(30, 41, 59, 0.4)",
-            'borderwidth': 1,
-            'bordercolor': "rgba(255, 255, 255, 0.1)",
-            'steps': [
-                {'range': [0, 50], 'color': 'rgba(239, 68, 68, 0.22)'},
-                {'range': [50, 75], 'color': 'rgba(245, 158, 11, 0.22)'},
-                {'range': [75, 100], 'color': 'rgba(16, 185, 129, 0.22)'}
-            ],
-            'threshold': {
-                'line': {'color': "#ec4899", 'width': 3},
-                'thickness': 0.8,
-                'value': 85
-            }
-        }
-    ))
-
-    fig_gauge.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font={'color': "#f1f5f9", 'family': "Plus Jakarta Sans"},
-        height=300,
-        margin=dict(l=25, r=25, t=25, b=20)
-    )
-
-    st.plotly_chart(fig_gauge, use_container_width=True, config={'displayModeBar': False})
-
-    if completed_topics == 0:
+    # --- GRAFİK 1: GAUGE (USTALIK ORANI) ---
+    with g_col1:
         st.markdown("""
+            <div class="chart-container">
+                <div class="chart-header">
+                    <span>⚡ Genel Ustalık Oranı Ortalaması</span>
+                </div>
+        """, unsafe_allow_html=True)
+
+        fig_gauge = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=avg_mastery,
+            domain={'x': [0, 1], 'y': [0, 1]},
+            number={'suffix': "%", 'font': {'size': 44, 'color': '#ffffff', 'family': 'Plus Jakarta Sans'}},
+            gauge={
+                'axis': {'range': [0, 100], 'tickwidth': 2, 'tickcolor': "#475569", 'tickfont': {'color': '#94a3b8'}},
+                'bar': {'color': "#38bdf8", 'thickness': 0.28},
+                'bgcolor': "rgba(30, 41, 59, 0.4)",
+                'borderwidth': 1,
+                'bordercolor': "rgba(255, 255, 255, 0.1)",
+                'steps': [
+                    {'range': [0, 50], 'color': 'rgba(239, 68, 68, 0.22)'},
+                    {'range': [50, 75], 'color': 'rgba(245, 158, 11, 0.22)'},
+                    {'range': [75, 100], 'color': 'rgba(16, 185, 129, 0.22)'}
+                ],
+                'threshold': {
+                    'line': {'color': "#ec4899", 'width': 3},
+                    'thickness': 0.8,
+                    'value': 85
+                }
+            }
+        ))
+
+        fig_gauge.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font={'color': "#f1f5f9", 'family': "Plus Jakarta Sans"},
+            height=300,
+            margin=dict(l=25, r=25, t=25, b=20)
+        )
+
+        st.plotly_chart(fig_gauge, use_container_width=True, config={'displayModeBar': False})
+
+        if completed_topics == 0:
+            st.markdown("""
+                <div style="text-align: center; color: #94a3b8; font-size: 13px; margin-top: -10px;">
+                    💡 <i>Dersler başladıkça ve konu tarama testleri yapıldıkça ustalık seviyesi burada otomatik hesaplanacaktır.</i>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # --- GRAFİK 2: DONUT CHART (STRATEJİK ÖNEM DAĞILIMI) ---
+    with g_col2:
+        st.markdown("""
+            <div class="chart-container">
+                <div class="chart-header">
+                    <span>🎯 Müfredat Stratejik Önem Dağılımı</span>
+                </div>
+        """, unsafe_allow_html=True)
+
+        color_map = {
+            "Kritik": "#f43f5e",
+            "Orta": "#38bdf8",
+            "Temel": "#10b981"
+        }
+
+        if completed_topics == 0:
+            chart_data = student_df["Stratejik Önem"].value_counts().reset_index() if not student_df.empty else pd.DataFrame(columns=["Stratejik Önem", "Konu Sayısı"])
+            if not chart_data.empty:
+                chart_data.columns = ["Stratejik Önem", "Konu Sayısı"]
+            center_text = f"<b>{total_topics}</b><br><span style='font-size:12px;color:#94a3b8;'>Toplam Konu</span>"
+        else:
+            chart_data = student_df[student_df["Durum"] == "Tamamlandı"]["Stratejik Önem"].value_counts().reset_index()
+            if not chart_data.empty:
+                chart_data.columns = ["Stratejik Önem", "Konu Sayısı"]
+            center_text = f"<b>{completed_topics}</b><br><span style='font-size:12px;color:#94a3b8;'>Bitirilen</span>"
+
+        if not chart_data.empty:
+            fig_donut = px.pie(
+                chart_data,
+                values="Konu Sayısı",
+                names="Stratejik Önem",
+                hole=0.62,
+                color="Stratejik Önem",
+                color_discrete_map=color_map
+            )
+
+            fig_donut.update_traces(
+                textposition='inside',
+                textinfo='percent+label',
+                hovertemplate="<b>%{label}</b>: %{value} Konu (%{percent})<extra></extra>",
+                marker=dict(line=dict(color='#0f172a', width=3))
+            )
+
+            fig_donut.add_annotation(
+                text=center_text,
+                x=0.5, y=0.5,
+                font_size=20,
+                font_color="#ffffff",
+                showarrow=False
+            )
+
+            fig_donut.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                font={'color': "#f1f5f9", 'family': "Plus Jakarta Sans"},
+                showlegend=True,
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=-0.15,
+                    xanchor="center",
+                    x=0.5,
+                    font=dict(color="#cbd5e1", size=12)
+                ),
+                height=300,
+                margin=dict(l=20, r=20, t=20, b=20)
+            )
+
+            st.plotly_chart(fig_donut, use_container_width=True, config={'displayModeBar': False})
+        else:
+            st.info("Gösterilecek veri bulunamadı.")
+
+        orta_count = len(student_df[student_df["Stratejik Önem"] == "Orta"]) if not student_df.empty else 0
+        temel_count = len(student_df[student_df["Stratejik Önem"] == "Temel"]) if not student_df.empty else 0
+        st.markdown(f"""
             <div style="text-align: center; color: #94a3b8; font-size: 13px; margin-top: -10px;">
-                💡 <i>Dersler başladıkça ve konu tarama testleri yapıldıkça ustalık seviyesi burada otomatik hesaplanacaktır.</i>
+                🎯 <i>Müfredatta <b>{total_critical} Kritik</b>, <b>{orta_count} Orta</b> ve <b>{temel_count} Temel</b> konu bulunmaktadır.</i>
             </div>
         """, unsafe_allow_html=True)
-        
-    st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # --- DİNAMİK VERİ TABLOSU (MÜFREDAT DETAYI) ---
+    st.markdown("### 📋 Müfredat & İlerleme Detay Tablosu")
+
+    display_cols = ["Ders", "Ana Ünite", "Konu", "Stratejik Önem", "Durum", "Ustalık Oranı (%)"]
+    valid_cols = [c for c in display_cols if c in filtered_df.columns]
+    table_df = filtered_df[valid_cols].reset_index(drop=True)
+
+    def highlight_status(val):
+        if val == "Tamamlandı":
+            return "background-color: rgba(16, 185, 129, 0.22); color: #34d399; font-weight: 600; border-radius: 6px;"
+        elif val == "Devam Ediyor":
+            return "background-color: rgba(245, 158, 11, 0.22); color: #fbbf24; font-weight: 600; border-radius: 6px;"
+        elif val == "Başlamadı":
+            return "background-color: rgba(148, 163, 184, 0.12); color: #94a3b8; border-radius: 6px;"
+        return ""
+
+    def highlight_importance(val):
+        if val == "Kritik":
+            return "color: #fb7185; font-weight: bold;"
+        elif val == "Orta":
+            return "color: #38bdf8;"
+        elif val == "Temel":
+            return "color: #34d399;"
+        return ""
+
+    styled_table = (
+        table_df.style
+        .map(highlight_status, subset=["Durum"])
+        .map(highlight_importance, subset=["Stratejik Önem"])
+    )
+
+    st.dataframe(
+        styled_table,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "Ustalık Oranı (%)": st.column_config.ProgressColumn(
+                "Ustalık Oranı",
+                help="Öğrencinin ilgili konudaki test başarısı",
+                format="%d%%",
+                min_value=0,
+                max_value=100
+            ),
+            "Durum": st.column_config.TextColumn("Çalışma Durumu"),
+            "Stratejik Önem": st.column_config.TextColumn("Sınav Önemi"),
+            "Ders": st.column_config.TextColumn("Ders", width="small")
+        }
+    )
+
+    b_col1, b_col2 = st.columns([2, 1])
+    with b_col1:
+        st.caption(f"📅 Son Veri Güncellemesi: {datetime.now().strftime('%d.%m.%Y %H:%M')} | Filtrelenen {len(table_df)} / {total_topics} konu listeleniyor.")
+    with b_col2:
+        csv_bytes = table_df.to_csv(index=False).encode('utf-8-sig')
+        st.download_button(
+            label="📥 Tabloyu CSV Olarak İndir",
+            data=csv_bytes,
+            file_name=f"{selected_student}_mufredat_takip.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
 
 
-# --- GRAFİK 2: DONUT CHART (STRATEJİK ÖNEM DAĞILIMI) ---
-with g_col2:
-    st.markdown("""
-        <div class="chart-container">
-            <div class="chart-header">
-                <span>🎯 Müfredat Stratejik Önem Dağılımı</span>
-            </div>
-    """, unsafe_allow_html=True)
-
-    color_map = {
-        "Kritik": "#f43f5e",  # Rose
-        "Orta": "#38bdf8",    # Sky Blue
-        "Temel": "#10b981"    # Emerald
-    }
-
-    # Henüz tamamlanan yoksa tüm müfredatın stratejik önem dağılımını göster
-    if completed_topics == 0:
-        chart_data = student_df["Stratejik Önem"].value_counts().reset_index()
-        chart_data.columns = ["Stratejik Önem", "Konu Sayısı"]
-        center_text = f"<b>{total_topics}</b><br><span style='font-size:12px;color:#94a3b8;'>Toplam Konu</span>"
+# =========================================================
+# SEKME 2: AKTİF GÖREVLER VE ÖDEVLER (ÖĞRENCİ KİLİTLİ)
+# =========================================================
+with tab_gorevler:
+    # 1. ÖĞRENCİ KİLİDİ: Sadece seçili/kilitli öğrencinin görevlerini al
+    if not df_tasks.empty and "Ogrenci" in df_tasks.columns:
+        student_tasks = df_tasks[df_tasks["Ogrenci"].str.lower() == selected_student.lower()].copy()
     else:
-        chart_data = student_df[student_df["Durum"] == "Tamamlandı"]["Stratejik Önem"].value_counts().reset_index()
-        chart_data.columns = ["Stratejik Önem", "Konu Sayısı"]
-        center_text = f"<b>{completed_topics}</b><br><span style='font-size:12px;color:#94a3b8;'>Bitirilen</span>"
+        student_tasks = pd.DataFrame(columns=["Tarih", "Ogrenci", "Gorev Tipi", "Konu ve Hedef", "Durum", "Gorev"])
 
-    fig_donut = px.pie(
-        chart_data,
-        values="Konu Sayısı",
-        names="Stratejik Önem",
-        hole=0.62,
-        color="Stratejik Önem",
-        color_discrete_map=color_map
-    )
+    # 2. TARİHE GÖRE SIRALAMA (En yeni tarihler en üstte)
+    if not student_tasks.empty and "Tarih" in student_tasks.columns:
+        student_tasks["_tarih_dt"] = pd.to_datetime(student_tasks["Tarih"], errors="coerce", dayfirst=True)
+        student_tasks = student_tasks.sort_values(by=["_tarih_dt", "Tarih"], ascending=[False, False]).drop(columns=["_tarih_dt"])
 
-    fig_donut.update_traces(
-        textposition='inside',
-        textinfo='percent+label',
-        hovertemplate="<b>%{label}</b>: %{value} Konu (%{percent})<extra></extra>",
-        marker=dict(line=dict(color='#0f172a', width=3))
-    )
+    # 3. GÖREV İSTATİSTİKLERİ (METRİKLER)
+    total_tasks_count = len(student_tasks)
+    pending_tasks = student_tasks[student_tasks["Durum"].str.lower() == "bekliyor"] if not student_tasks.empty else pd.DataFrame()
+    completed_tasks = student_tasks[student_tasks["Durum"].str.lower() == "tamamlandı"] if not student_tasks.empty else pd.DataFrame()
 
-    fig_donut.add_annotation(
-        text=center_text,
-        x=0.5, y=0.5,
-        font_size=20,
-        font_color="#ffffff",
-        showarrow=False
-    )
+    t_col1, t_col2, t_col3 = st.columns(3)
+    with t_col1:
+        st.metric(
+            label="Toplam Görev & Ödev",
+            value=f"{total_tasks_count} Görev",
+            delta=f"{selected_student} İçin Atanan"
+        )
+    with t_col2:
+        st.metric(
+            label="Bekleyen Görevler",
+            value=f"{len(pending_tasks)} Görev",
+            delta="Aktif Çalışma Bekliyor" if len(pending_tasks) > 0 else "Tümü Tamamlandı 🎉"
+        )
+    with t_col3:
+        st.metric(
+            label="Tamamlanan Görevler",
+            value=f"{len(completed_tasks)} Görev",
+            delta=f"%{round(len(completed_tasks) / total_tasks_count * 100, 1)} Başarı Oranı" if total_tasks_count > 0 else "0% Başarı"
+        )
 
-    fig_donut.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font={'color': "#f1f5f9", 'family': "Plus Jakarta Sans"},
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=-0.15,
-            xanchor="center",
-            x=0.5,
-            font=dict(color="#cbd5e1", size=12)
-        ),
-        height=300,
-        margin=dict(l=20, r=20, t=20, b=20)
-    )
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
-    st.plotly_chart(fig_donut, use_container_width=True, config={'displayModeBar': False})
+    # 4. HIZLI FİLTRELEME ÇUBUĞU
+    f_col1, f_col2, f_col3 = st.columns([1.5, 1.5, 2])
+    with f_col1:
+        task_status_filter = st.selectbox(
+            "⚡ Durum Filtresi",
+            options=["Tümü", "Bekliyor", "Tamamlandı"],
+            key="task_status_filter"
+        )
+    with f_col2:
+        all_types = ["Tümü"] + sorted(student_tasks["Gorev Tipi"].dropna().unique().tolist()) if not student_tasks.empty else ["Tümü"]
+        task_type_filter = st.selectbox(
+            "📂 Görev Tipi",
+            options=all_types,
+            key="task_type_filter"
+        )
+    with f_col3:
+        st.write("") # Boşluk
+        st.write("")
+        if is_parent_mode:
+            st.caption(f"🔒 **{selected_student}** öğrencisine kilitli görünüm.")
+        else:
+            st.caption(f"👤 Yönetici Görünümü: **{selected_student}** listeleniyor.")
 
-    orta_count = len(student_df[student_df["Stratejik Önem"] == "Orta"])
-    temel_count = len(student_df[student_df["Stratejik Önem"] == "Temel"])
-    st.markdown(f"""
-        <div style="text-align: center; color: #94a3b8; font-size: 13px; margin-top: -10px;">
-            🎯 <i>Müfredatta <b>{total_critical} Kritik</b>, <b>{orta_count} Orta</b> ve <b>{temel_count} Temel</b> konu bulunmaktadır.</i>
-        </div>
-    """, unsafe_allow_html=True)
+    # Filtre uygulama
+    filtered_tasks = student_tasks.copy()
+    if task_status_filter != "Tümü":
+        filtered_tasks = filtered_tasks[filtered_tasks["Durum"].str.lower() == task_status_filter.lower()]
+    if task_type_filter != "Tümü":
+        filtered_tasks = filtered_tasks[filtered_tasks["Gorev Tipi"] == task_type_filter]
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("---")
 
+    # 5. MODERN GÖREV KARTLARI LİSTESİ
+    if filtered_tasks.empty:
+        if total_tasks_count == 0:
+            st.markdown(f"""
+                <div class="info-box" style="border-left-color: #10b981; text-align: center; padding: 24px;">
+                    <h3 style="color: #34d399; margin: 0 0 6px 0;">🎉 Harika! Bekleyen Görev Yok</h3>
+                    <p style="color: #94a3b8; margin: 0; font-size: 14px;">
+                        <b>{selected_student}</b> için şu an atanmış aktif bir ödev veya görev bulunmuyor.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.info(f"Seçilen filtrelere uygun ({task_status_filter} / {task_type_filter}) görev bulunamadı.")
+    else:
+        st.markdown(f"#### 📋 {selected_student} - Görev Listesi ({len(filtered_tasks)} Adet)")
+        
+        for idx, row in filtered_tasks.iterrows():
+            status = str(row.get("Durum", "Bekliyor")).strip()
+            is_completed = status.lower() == "tamamlandı"
+            
+            card_class = "task-card-completed" if is_completed else "task-card-pending"
+            badge_status = (
+                '<span class="badge badge-success">✅ Tamamlandı</span>'
+                if is_completed
+                else '<span class="badge badge-warning">⏳ Bekliyor</span>'
+            )
 
-# ---------------------------------------------------------
-# DİNAMİK VERİ TABLOSU (MÜFREDAT DETAYI)
-# ---------------------------------------------------------
-st.markdown("### 📋 Müfredat & İlerleme Detay Tablosu")
+            topic_title = str(row.get("Konu ve Hedef", "Belirtilmedi"))
+            task_type = str(row.get("Gorev Tipi", "Genel Görev"))
+            task_code = str(row.get("Gorev", "-"))
+            task_date = str(row.get("Tarih", "-"))
 
-display_cols = ["Ders", "Ana Ünite", "Konu", "Stratejik Önem", "Durum", "Ustalık Oranı (%)"]
-valid_cols = [c for c in display_cols if c in filtered_df.columns]
-table_df = filtered_df[valid_cols].reset_index(drop=True)
+            # Kart HTML Render
+            st.markdown(f"""
+            <div class="task-card {card_class}">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <div class="task-title">🎯 {topic_title}</div>
+                        <div style="color: #94a3b8; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                            <span>📅 Tarih: <b style="color: #cbd5e1;">{task_date}</b></span>
+                        </div>
+                    </div>
+                    <div>
+                        {badge_status}
+                    </div>
+                </div>
+                <div class="task-meta-row">
+                    <span class="badge badge-info">📂 {task_type}</span>
+                    <span class="badge" style="background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.25); font-family: monospace;">🔖 Kod: {task_code}</span>
+                    <span class="badge" style="background: rgba(56, 189, 248, 0.08); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.2);">👤 Öğrenci: {row.get('Ogrenci', selected_student)}</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-def highlight_status(val):
-    if val == "Tamamlandı":
-        return "background-color: rgba(16, 185, 129, 0.22); color: #34d399; font-weight: 600; border-radius: 6px;"
-    elif val == "Devam Ediyor":
-        return "background-color: rgba(245, 158, 11, 0.22); color: #fbbf24; font-weight: 600; border-radius: 6px;"
-    elif val == "Başlamadı":
-        return "background-color: rgba(148, 163, 184, 0.12); color: #94a3b8; border-radius: 6px;"
-    return ""
-
-def highlight_importance(val):
-    if val == "Kritik":
-        return "color: #fb7185; font-weight: bold;"
-    elif val == "Orta":
-        return "color: #38bdf8;"
-    elif val == "Temel":
-        return "color: #34d399;"
-    return ""
-
-styled_table = (
-    table_df.style
-    .map(highlight_status, subset=["Durum"])
-    .map(highlight_importance, subset=["Stratejik Önem"])
-)
-
-st.dataframe(
-    styled_table,
-    use_container_width=True,
-    hide_index=True,
-    column_config={
-        "Ustalık Oranı (%)": st.column_config.ProgressColumn(
-            "Ustalık Oranı",
-            help="Öğrencinin ilgili konudaki test başarısı",
-            format="%d%%",
-            min_value=0,
-            max_value=100
-        ),
-        "Durum": st.column_config.TextColumn("Çalışma Durumu"),
-        "Stratejik Önem": st.column_config.TextColumn("Sınav Önemi"),
-        "Ders": st.column_config.TextColumn("Ders", width="small")
-    }
-)
-
-# Tablo Altı Araçları (İndirme & Bilgi)
-b_col1, b_col2 = st.columns([2, 1])
-with b_col1:
-    st.caption(f"📅 Son Veri Güncellemesi: {datetime.now().strftime('%d.%m.%Y %H:%M')} | Filtrelenen {len(table_df)} / {total_topics} konu listeleniyor.")
-
-with b_col2:
-    csv_bytes = table_df.to_csv(index=False).encode('utf-8-sig')
-    st.download_button(
-        label="📥 Tabloyu CSV Olarak İndir",
-        data=csv_bytes,
-        file_name=f"{selected_student}_mufredat_takip.csv",
-        mime="text/csv",
-        use_container_width=True
-    )
+        # Görevler CSV İndir
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        csv_tasks_bytes = filtered_tasks.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
+        st.download_button(
+            label=f"📥 {selected_student} Görev Listesini İndir (CSV)",
+            data=csv_tasks_bytes,
+            file_name=f"{selected_student}_gorevler.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
