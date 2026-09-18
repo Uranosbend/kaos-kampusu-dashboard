@@ -264,34 +264,20 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
             df = df.rename(columns=col_map)
     return df
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=15)
 def fetch_data():
     """
     Canlı Google E-Tablo'dan müfredat verisini çeker.
-    Her 60 saniyede bir veya yenile butonuna tıklandığında otomatik güncellenir.
+    Google Sheets asıl ve tek veri kaynağıdır. Canlı bağlantı başarılı olduğunda
+    tüm ekleme/silme işlemleri doğrudan yansır ve yerel yedek güncellenir.
+    Yerel yedek SADECE Google Sheets bağlantısı koptuğunda devreye girer.
     """
     is_live = False
     try:
         df_live = pd.read_csv(LIVE_SHEET_URL, encoding="utf-8")
-        df_live = normalize_columns(df_live)
-        
-        # Yerel dosyada olup canlıda olmayan öğrenci kayıtlarını birleştir
-        if os.path.exists(LOCAL_BACKUP_CSV):
-            df_local = pd.read_csv(LOCAL_BACKUP_CSV, encoding="utf-8-sig")
-            df_local = normalize_columns(df_local)
-            if "Öğrenci" in df_local.columns and "Öğrenci" in df_live.columns:
-                missing_students = set(df_local["Öğrenci"].dropna().unique()) - set(df_live["Öğrenci"].dropna().unique())
-                if missing_students:
-                    extra_records = df_local[df_local["Öğrenci"].isin(missing_students)]
-                    df = pd.concat([df_live, extra_records], ignore_index=True)
-                else:
-                    df = df_live
-            else:
-                df = df_live
-        else:
-            df = df_live
-
+        df = normalize_columns(df_live)
         is_live = True
+        # Canlı veriyi yerel yedek dosyasına kaydet
         df.to_csv(LOCAL_BACKUP_CSV, index=False, encoding="utf-8-sig")
     except Exception:
         if os.path.exists(LOCAL_BACKUP_CSV):
@@ -325,11 +311,12 @@ def fetch_data():
 LIVE_TASKS_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/gviz/tq?tqx=out:csv&sheet=G%C3%B6revler"
 LOCAL_TASKS_BACKUP = os.path.join(os.path.dirname(__file__), "gorevler_yedek.csv")
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=15)
 def fetch_tasks_data():
     """
     Canlı Google E-Tablo 'Görevler' sayfasından ödev ve görev verilerini çeker.
-    Çekilen canlı veriyi yerel yedek olarak saklar. Bağlantı kesilirse yerel yedeği devreye alır.
+    Google Sheets asıl kaynaktır; kullanıcı görevleri sildiğinde anında silinmiş (boş) olarak yansır.
+    Yerel yedek SADECE internet/bağlantı hatası durumunda (offline modda) devreye girer.
     """
     is_live = False
     df_tasks = pd.DataFrame()
@@ -337,16 +324,13 @@ def fetch_tasks_data():
         df_live = pd.read_csv(LIVE_TASKS_URL, encoding="utf-8")
         df_live.columns = df_live.columns.str.strip()
         
-        if len(df_live) > 0:
-            df_tasks = df_live
-            is_live = True
-            # Canlı veriyi yerel yedek dosyasına kaydet
-            df_tasks.to_csv(LOCAL_TASKS_BACKUP, index=False, encoding="utf-8-sig")
-        else:
-            if os.path.exists(LOCAL_TASKS_BACKUP):
-                df_tasks = pd.read_csv(LOCAL_TASKS_BACKUP, encoding="utf-8-sig")
-            is_live = True
+        # Canlı veriyi doğrudan al (kullanıcı satırları sildiyse boş gelir ve boş yansır)
+        df_tasks = df_live
+        is_live = True
+        # Canlı tabloyu anında yerel yedek dosyasına kaydet
+        df_tasks.to_csv(LOCAL_TASKS_BACKUP, index=False, encoding="utf-8-sig")
     except Exception:
+        # Yalnızca bağlantı hatasında yerel yedeğe başvur
         if os.path.exists(LOCAL_TASKS_BACKUP):
             df_tasks = pd.read_csv(LOCAL_TASKS_BACKUP, encoding="utf-8-sig")
         else:
