@@ -323,13 +323,13 @@ def fetch_data():
 # CANLI GOOGLE SHEETS VERİ ENTEGRASYONU (GÖREVLER & ÖDEVLER)
 # ---------------------------------------------------------
 LIVE_TASKS_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/gviz/tq?tqx=out:csv&sheet=G%C3%B6revler"
-LOCAL_TASKS_CSV = os.path.join(os.path.dirname(__file__), "gorevler_verileri.csv")
+LOCAL_TASKS_BACKUP = os.path.join(os.path.dirname(__file__), "gorevler_yedek.csv")
 
 @st.cache_data(ttl=60)
 def fetch_tasks_data():
     """
     Canlı Google E-Tablo 'Görevler' sayfasından ödev ve görev verilerini çeker.
-    Eğer canlı veride henüz satır girilmemişse veya ulaşılamazsa yerel yedeği kullanır.
+    Çekilen canlı veriyi yerel yedek olarak saklar. Bağlantı kesilirse yerel yedeği devreye alır.
     """
     is_live = False
     df_tasks = pd.DataFrame()
@@ -340,15 +340,15 @@ def fetch_tasks_data():
         if len(df_live) > 0:
             df_tasks = df_live
             is_live = True
-            df_tasks.to_csv(LOCAL_TASKS_CSV, index=False, encoding="utf-8-sig")
+            # Canlı veriyi yerel yedek dosyasına kaydet
+            df_tasks.to_csv(LOCAL_TASKS_BACKUP, index=False, encoding="utf-8-sig")
         else:
-            # Canlı tablo boşsa yerel yedeği kullan
-            if os.path.exists(LOCAL_TASKS_CSV):
-                df_tasks = pd.read_csv(LOCAL_TASKS_CSV, encoding="utf-8")
+            if os.path.exists(LOCAL_TASKS_BACKUP):
+                df_tasks = pd.read_csv(LOCAL_TASKS_BACKUP, encoding="utf-8-sig")
             is_live = True
     except Exception:
-        if os.path.exists(LOCAL_TASKS_CSV):
-            df_tasks = pd.read_csv(LOCAL_TASKS_CSV, encoding="utf-8")
+        if os.path.exists(LOCAL_TASKS_BACKUP):
+            df_tasks = pd.read_csv(LOCAL_TASKS_BACKUP, encoding="utf-8-sig")
         else:
             df_tasks = pd.DataFrame(columns=["Tarih", "Ogrenci", "Gorev Tipi", "Konu ve Hedef", "Durum", "Gorev"])
 
