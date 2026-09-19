@@ -209,6 +209,10 @@ st.markdown("""
         border-left: 5px solid #10b981 !important;
         border-color: rgba(16, 185, 129, 0.25);
     }
+    .task-card-progress {
+        border-left: 5px solid #38bdf8 !important;
+        border-color: rgba(56, 189, 248, 0.25);
+    }
     .task-title {
         font-size: 18px;
         font-weight: 700;
@@ -234,6 +238,40 @@ st.markdown("""
 # ---------------------------------------------------------
 LIVE_SHEET_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/export?format=csv"
 LOCAL_BACKUP_CSV = os.path.join(os.path.dirname(__file__), "ogrenci_verileri.csv")
+
+def normalize_turkish_str(s: str) -> str:
+    """Türkçe karakter ve büyük/küçük harf duyarsız metin karşılaştırması sağlar."""
+    if not s or pd.isna(s):
+        return ""
+    return str(s).strip().replace("İ", "i").replace("I", "ı").replace("ı", "i").lower()
+
+def normalize_task_status(val: str) -> str:
+    """Görev durumunu emoji ve serbest metin varyasyonlarından arındırıp standartlaştırır."""
+    if not val or pd.isna(val):
+        return "Bekliyor"
+    s = str(val).strip().casefold().replace("ı", "i").replace("İ", "i")
+    if any(w in s for w in ["tamamlan", "bitti", "yapildi", "done", "completed", "tamam"]):
+        return "Tamamlandı"
+    elif any(w in s for w in ["devam", "suruyor", "progress"]):
+        return "Devam Ediyor"
+    elif any(w in s for w in ["iptal", "cancel"]):
+        return "İptal"
+    elif any(w in s for w in ["bekli", "pending", "yapilacak", "baslamadi"]):
+        return "Bekliyor"
+    return str(val).strip()
+
+def normalize_mufredat_status(val: str) -> str:
+    """Müfredat durumunu standartlaştırır."""
+    if not val or pd.isna(val):
+        return "Başlamadı"
+    s = str(val).strip().casefold().replace("ı", "i").replace("İ", "i")
+    if any(w in s for w in ["tamamlan", "bitti", "done", "completed", "tamam"]):
+        return "Tamamlandı"
+    elif any(w in s for w in ["devam", "suruyor", "progress"]):
+        return "Devam Ediyor"
+    elif any(w in s for w in ["baslamadi", "bekli"]):
+        return "Başlamadı"
+    return str(val).strip()
 
 def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Müfredat tablosu sütunlarını standart hale getirir."""
@@ -297,7 +335,7 @@ def fetch_data():
             df["Ustalık Oranı (%)"] = pd.to_numeric(df["Ustalık Oranı (%)"], errors="coerce").fillna(0).astype(int)
         
         if "Durum" in df.columns:
-            df["Durum"] = df["Durum"].fillna("Başlamadı").str.strip()
+            df["Durum"] = df["Durum"].apply(normalize_mufredat_status)
         
         if "Stratejik Önem" in df.columns:
             df["Stratejik Önem"] = df["Stratejik Önem"].fillna("Temel").str.strip()
@@ -327,8 +365,6 @@ def fetch_tasks_data():
         # Canlı veriyi doğrudan al (kullanıcı satırları sildiyse boş gelir ve boş yansır)
         df_tasks = df_live
         is_live = True
-        # Canlı tabloyu anında yerel yedek dosyasına kaydet
-        df_tasks.to_csv(LOCAL_TASKS_BACKUP, index=False, encoding="utf-8-sig")
     except Exception:
         # Yalnızca bağlantı hatasında yerel yedeğe başvur
         if os.path.exists(LOCAL_TASKS_BACKUP):
@@ -357,7 +393,7 @@ def fetch_tasks_data():
             df_tasks = df_tasks.rename(columns=col_rename)
 
         if "Durum" in df_tasks.columns:
-            df_tasks["Durum"] = df_tasks["Durum"].fillna("Bekliyor").astype(str).str.strip()
+            df_tasks["Durum"] = df_tasks["Durum"].apply(normalize_task_status)
         if "Ogrenci" in df_tasks.columns:
             df_tasks["Ogrenci"] = df_tasks["Ogrenci"].fillna("").astype(str).str.strip()
         if "Tarih" in df_tasks.columns:
@@ -368,6 +404,10 @@ def fetch_tasks_data():
             df_tasks["Konu ve Hedef"] = df_tasks["Konu ve Hedef"].fillna("Belirtilmedi").astype(str).str.strip()
         if "Gorev" in df_tasks.columns:
             df_tasks["Gorev"] = df_tasks["Gorev"].fillna("-").astype(str).str.strip()
+
+        # Standartlaştırılmış veriyi yerel yedek dosyasına kaydet
+        if is_live:
+            df_tasks.to_csv(LOCAL_TASKS_BACKUP, index=False, encoding="utf-8-sig")
 
     return df_tasks, is_live
 
@@ -803,7 +843,7 @@ with tab_mufredat:
 with tab_gorevler:
     # 1. ÖĞRENCİ KİLİDİ: Sadece seçili/kilitli öğrencinin görevlerini al
     if not df_tasks.empty and "Ogrenci" in df_tasks.columns:
-        student_tasks = df_tasks[df_tasks["Ogrenci"].str.lower() == selected_student.lower()].copy()
+        student_tasks = df_tasks[df_tasks["Ogrenci"].apply(normalize_turkish_str) == normalize_turkish_str(selected_student)].copy()
     else:
         student_tasks = pd.DataFrame(columns=["Tarih", "Ogrenci", "Gorev Tipi", "Konu ve Hedef", "Durum", "Gorev"])
 
@@ -814,8 +854,9 @@ with tab_gorevler:
 
     # 3. GÖREV İSTATİSTİKLERİ (METRİKLER)
     total_tasks_count = len(student_tasks)
-    pending_tasks = student_tasks[student_tasks["Durum"].str.lower() == "bekliyor"] if not student_tasks.empty else pd.DataFrame()
-    completed_tasks = student_tasks[student_tasks["Durum"].str.lower() == "tamamlandı"] if not student_tasks.empty else pd.DataFrame()
+    pending_tasks = student_tasks[student_tasks["Durum"] == "Bekliyor"] if not student_tasks.empty else pd.DataFrame()
+    completed_tasks = student_tasks[student_tasks["Durum"] == "Tamamlandı"] if not student_tasks.empty else pd.DataFrame()
+    in_progress_tasks = student_tasks[student_tasks["Durum"] == "Devam Ediyor"] if not student_tasks.empty else pd.DataFrame()
 
     t_col1, t_col2, t_col3 = st.columns(3)
     with t_col1:
@@ -844,7 +885,7 @@ with tab_gorevler:
     with f_col1:
         task_status_filter = st.selectbox(
             "⚡ Durum Filtresi",
-            options=["Tümü", "Bekliyor", "Tamamlandı"],
+            options=["Tümü", "Bekliyor", "Tamamlandı", "Devam Ediyor"],
             key="task_status_filter"
         )
     with f_col2:
@@ -856,7 +897,9 @@ with tab_gorevler:
         )
     with f_col3:
         st.write("") # Boşluk
-        st.write("")
+        if st.button("🔄 Görevleri Şimdi Yenile", key="btn_refresh_tasks", use_container_width=True):
+            st.cache_data.clear()
+            st.rerun()
         if is_parent_mode:
             st.caption(f"🔒 **{selected_student}** öğrencisine kilitli görünüm.")
         else:
@@ -865,7 +908,7 @@ with tab_gorevler:
     # Filtre uygulama
     filtered_tasks = student_tasks.copy()
     if task_status_filter != "Tümü":
-        filtered_tasks = filtered_tasks[filtered_tasks["Durum"].str.lower() == task_status_filter.lower()]
+        filtered_tasks = filtered_tasks[filtered_tasks["Durum"] == task_status_filter]
     if task_type_filter != "Tümü":
         filtered_tasks = filtered_tasks[filtered_tasks["Gorev Tipi"] == task_type_filter]
 
@@ -889,14 +932,18 @@ with tab_gorevler:
         
         for idx, row in filtered_tasks.iterrows():
             status = str(row.get("Durum", "Bekliyor")).strip()
-            is_completed = status.lower() == "tamamlandı"
+            is_completed = status == "Tamamlandı"
+            is_in_progress = status == "Devam Ediyor"
             
-            card_class = "task-card-completed" if is_completed else "task-card-pending"
-            badge_status = (
-                '<span class="badge badge-success">✅ Tamamlandı</span>'
-                if is_completed
-                else '<span class="badge badge-warning">⏳ Bekliyor</span>'
-            )
+            if is_completed:
+                card_class = "task-card-completed"
+                badge_status = '<span class="badge badge-success">✅ Tamamlandı</span>'
+            elif is_in_progress:
+                card_class = "task-card-progress"
+                badge_status = '<span class="badge badge-info">🔄 Devam Ediyor</span>'
+            else:
+                card_class = "task-card-pending"
+                badge_status = '<span class="badge badge-warning">⏳ Bekliyor</span>'
 
             topic_title = str(row.get("Konu ve Hedef", "Belirtilmedi"))
             task_type = str(row.get("Gorev Tipi", "Genel Görev"))
