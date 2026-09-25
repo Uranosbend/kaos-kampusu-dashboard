@@ -239,6 +239,99 @@ st.markdown("""
 LIVE_SHEET_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/export?format=csv"
 LOCAL_BACKUP_CSV = os.path.join(os.path.dirname(__file__), "ogrenci_verileri.csv")
 
+# 6. Sınıf MEB Müfredat Kataloğu (Asya için Garantili Liste)
+ASYA_6TH_GRADE_DATA = [
+    # --- MATEMATİK (6. Sınıf MEB) ---
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Üslü İfadeler ve İşlem Önceliği", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Dağılma Özelliği ve Ortak Çarpan Parantezi", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Doğal Sayı Problemleri", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Çarpanlar ve Katlar", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Bölünebilme Kuralları", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Asal Sayılar ve Asal Çarpanlar", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Sayılar ve İşlemler", "Ortak Bölenler ve Katlar", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Kümeler", "Kümeler ve Kesişim-Birleşim", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Tam Sayılar", "Tam Sayılar ve Sayı Doğrusunda Gösterim", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Tam Sayılar", "Tam Sayılarda Karşılaştırma ve Mutlak Değer", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Kesirlerle İşlemler", "Kesirleri Karşılaştırma ve Sıralama", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Kesirlerle İşlemler", "Kesirlerle Toplama ve Çıkarma", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Kesirlerle İşlemler", "Kesirlerle Çarpma ve Bölme", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Kesirlerle İşlemler", "Kesir Problemleri", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Ondalık Gösterim", "Ondalık Gösterimleri Yuvarlama ve Çözümleme", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Ondalık Gösterim", "Ondalık Gösterimle Çarpma ve Bölme", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Ondalık Gösterim", "Ondalık Gösterim Problemleri", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Oran", "Oran Kavramı ve Birimli-Birimsiz Oran", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Cebir", "Cebirsel İfadeler ve Değer Hesaplama", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Veri İşleme", "Veri Toplama ve İkili Sütun Grafiği", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Veri İşleme", "Aritmetik Ortalama ve Açıklık", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Açılar (Komşu, Tümler, Bütünler, Ters)", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Üçgende Alan ve Yükseklik", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Paralelkenarda Alan", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Alan ve Arazi Ölçü Birimleri", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Çember ve Çevre Uzunluğu", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Dikdörtgenler Prizmasının Hacmi", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Matematik", "Geometri ve Ölçme", "Hacim ve Sıvı Ölçme İlişkisi", "Temel", "Başlamadı", 0],
+
+    # --- FEN BİLİMLERİ (6. Sınıf MEB) ---
+    ["Asya", 6, "Fen Bilimleri", "Güneş Sistemi ve Tutulmalar", "Güneş Sistemi ve Gezegenler", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Güneş Sistemi ve Tutulmalar", "Güneş ve Ay Tutulmaları", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler", "Destek ve Hareket Sistemi", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler", "Sindirim Sistemi ve Enzimler", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler", "Dolaşım Sistemi ve Kan Grupları", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler", "Solunum Sistemi ve Gaz Alışverişi", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler", "Boşaltım Sistemi ve Organları", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Kuvvet ve Hareket", "Bileşke Kuvvet ve Net Kuvvet", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Kuvvet ve Hareket", "Dengelenmiş ve Dengelenmemiş Kuvvetler", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Kuvvet ve Hareket", "Sabit Süratli Hareket ve Grafikleri", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Madde ve Isı", "Maddenin Tanecikli Yapısı", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Madde ve Isı", "Yoğunluk ve Yoğunluk Hesaplama", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Madde ve Isı", "Isı İletkenliği ve Yalıtım Malzemeleri", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Madde ve Isı", "Yakıtlar ve Yanma Ürünleri", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Ses ve Özellikleri", "Sesin Yayılması ve Farklı Ortamlarda İletimi", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Ses ve Özellikleri", "Sesin Sürati ve Işıkla Karşılaştırılması", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Ses ve Özellikleri", "Sesin Maddeyle Etkileşimi ve Ses Yalıtımı", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler ve Sağlığı", "Denetleyici ve Düzenleyici Sistemler", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler ve Sağlığı", "İç Salgı Bezleri ve Hormonlar", "Kritik", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler ve Sağlığı", "Duyu Organları ve Görevleri", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Vücudumuzdaki Sistemler ve Sağlığı", "Sistemlerin Sağlığı ve İlk Yardım", "Temel", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Elektriğin İletimi", "İletken ve Yalıtkan Maddeler", "Orta", "Başlamadı", 0],
+    ["Asya", 6, "Fen Bilimleri", "Elektriğin İletimi", "Elektriksel Direnç ve Bağlı Olduğu Faktörler", "Kritik", "Başlamadı", 0]
+]
+
+def ensure_asya_6th_grade(df: pd.DataFrame) -> pd.DataFrame:
+    """Asya'nın sınıfını ve müfredatını her zaman 6. sınıf MEB müfredatı olarak garanti eder."""
+    cols = ["Öğrenci", "Sınıf", "Ders", "Ana Ünite", "Konu", "Stratejik Önem", "Durum", "Ustalık Oranı (%)"]
+    asya_df = pd.DataFrame(ASYA_6TH_GRADE_DATA, columns=cols)
+    
+    if df.empty or "Öğrenci" not in df.columns:
+        return asya_df
+    
+    asya_mask = df["Öğrenci"].astype(str).str.strip().str.casefold() == "asya"
+    
+    needs_update = False
+    if asya_mask.any():
+        asya_grades = [str(x).strip().replace(".0", "") for x in df.loc[asya_mask, "Sınıf"].unique()]
+        asya_topics = df.loc[asya_mask, "Konu"].tolist() if "Konu" in df.columns else []
+        # Eğer 7. sınıf olarak gelmişse veya eski 7. sınıf konuları (Tam Sayılarla İşlemler, Hücre vb.) içeriyorsa
+        if "7" in asya_grades or any(old in " ".join(map(str, asya_topics)) for old in ["Tam Sayılarla İşlemler", "Hücre ve Bölünmeler", "Güneş Sistemi ve Ötesi", "Rasyonel"]):
+            needs_update = True
+    else:
+        needs_update = True
+
+    if needs_update:
+        if asya_mask.any():
+            existing_asya = df[asya_mask]
+            status_map = dict(zip(existing_asya["Konu"], existing_asya["Durum"])) if "Durum" in existing_asya.columns else {}
+            mastery_map = dict(zip(existing_asya["Konu"], existing_asya["Ustalık Oranı (%)"])) if "Ustalık Oranı (%)" in existing_asya.columns else {}
+            for idx, row in asya_df.iterrows():
+                t = row["Konu"]
+                if t in status_map:
+                    asya_df.at[idx, "Durum"] = status_map[t]
+                if t in mastery_map:
+                    asya_df.at[idx, "Ustalık Oranı (%)"] = mastery_map[t]
+        df = pd.concat([df[~asya_mask], asya_df], ignore_index=True)
+        
+    return df
+
 def normalize_turkish_str(s: str) -> str:
     """Türkçe karakter ve büyük/küçük harf duyarsız metin karşılaştırması sağlar."""
     if not s or pd.isna(s):
@@ -306,23 +399,29 @@ def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
 def fetch_data():
     """
     Canlı Google E-Tablo'dan müfredat verisini çeker.
-    Google Sheets asıl ve tek veri kaynağıdır. Canlı bağlantı başarılı olduğunda
-    tüm ekleme/silme işlemleri doğrudan yansır ve yerel yedek güncellenir.
-    Yerel yedek SADECE Google Sheets bağlantısı koptuğunda devreye girer.
+    Google Sheets'te Asya henüz 6. sınıfa güncellenmemiş olsa bile,
+    Asya her zaman 6. sınıf MEB müfredatı ile gösterilir.
     """
     is_live = False
     try:
         df_live = pd.read_csv(LIVE_SHEET_URL, encoding="utf-8")
         df = normalize_columns(df_live)
         is_live = True
-        # Canlı veriyi yerel yedek dosyasına kaydet
-        df.to_csv(LOCAL_BACKUP_CSV, index=False, encoding="utf-8-sig")
     except Exception:
         if os.path.exists(LOCAL_BACKUP_CSV):
             df = pd.read_csv(LOCAL_BACKUP_CSV, encoding="utf-8-sig")
             df = normalize_columns(df)
         else:
             df = pd.DataFrame()
+
+    # Asya'nın 6. sınıf müfredatını garanti altına al
+    df = ensure_asya_6th_grade(df)
+
+    # Güncel tabloyu yerel yedek dosyasına kaydet
+    try:
+        df.to_csv(LOCAL_BACKUP_CSV, index=False, encoding="utf-8-sig")
+    except Exception:
+        pass
 
     if not df.empty:
         if "Ustalık Oranı (%)" in df.columns:
@@ -544,12 +643,16 @@ if not filtered_df.empty:
         filtered_df = filtered_df[filtered_df["Durum"] == selected_status]
 
 # Sınıf Bilgisi
-raw_grade = student_df["Sınıf"].iloc[0] if not student_df.empty and "Sınıf" in student_df.columns else "8"
+raw_grade = student_df["Sınıf"].iloc[0] if not student_df.empty and "Sınıf" in student_df.columns else "6"
 grade_label = f"{raw_grade}. Sınıf"
 if str(raw_grade) == "8":
     sub_grade_label = "LGS Hazırlık Grubu"
+elif str(raw_grade) == "6":
+    sub_grade_label = "6. Sınıf Temel & Beceri Temelli Müfredat"
 elif str(raw_grade) == "4":
     sub_grade_label = "Ortaokula Hazırlık Grubu"
+elif str(raw_grade) == "7":
+    sub_grade_label = "Ortaokul Ara Sınıf / LGS Altyapı"
 else:
     sub_grade_label = "Ortaokul Müfredatı"
 

@@ -1,24 +1,7 @@
 ﻿Öğrenci,Sınıf,Ders,Ana Ünite,Konu,Stratejik Önem,Durum,Ustalık Oranı (%)
-Asya,7,Matematik,Sayılar ve İşlemler,Tam Sayılarla İşlemler,Temel,Başlamadı,0
-Asya,7,Matematik,Sayılar ve İşlemler,Rasyonel Sayılar ve İşlemler,Kritik,Başlamadı,0
-Asya,7,Matematik,Cebir,Cebirsel İfadeler,Kritik,Başlamadı,0
-Asya,7,Matematik,Cebir,Eşitlik ve Denklem,Kritik,Başlamadı,0
-Asya,7,Matematik,Orantı,Oran ve Orantı,Kritik,Başlamadı,0
-Asya,7,Matematik,Yüzdeler,Yüzdeler,Orta,Başlamadı,0
-Asya,7,Matematik,Geometri,Doğrular ve Açılar,Temel,Başlamadı,0
-Asya,7,Matematik,Geometri,Çokgenler,Orta,Başlamadı,0
-Asya,7,Matematik,Geometri,Çember ve Daire,Orta,Başlamadı,0
-Asya,7,Matematik,Veri,Veri Analizi,Temel,Başlamadı,0
-Asya,7,Fen Bilimleri,Uzay,Güneş Sistemi ve Ötesi,Temel,Başlamadı,0
-Asya,7,Fen Bilimleri,Canlılar,Hücre ve Bölünmeler,Kritik,Başlamadı,0
-Asya,7,Fen Bilimleri,Fiziksel Olaylar,Kuvvet ve Enerji,Kritik,Başlamadı,0
-Asya,7,Fen Bilimleri,Madde,Saf Madde ve Karışımlar,Kritik,Başlamadı,0
-Asya,7,Fen Bilimleri,Fiziksel Olaylar,Işığın Madde ile Etkileşimi,Orta,Başlamadı,0
-Asya,7,Fen Bilimleri,Canlılar,Canlılarda Üreme Büyüme ve Gelişme,Orta,Başlamadı,0
-Asya,7,Fen Bilimleri,Fiziksel Olaylar,Elektrik Devreleri,Kritik,Başlamadı,0
 Utku,8,Matematik,Sayılar,Çarpanlar ve Katlar,Kritik,Başlamadı,0
-Utku,8,Matematik,Sayılar,Üslü İfadeler,Kritik,Başlamadı,0
-Utku,8,Matematik,Sayılar,Kareköklü İfadeler,Kritik,Başlamadı,0
+Utku,8,Matematik,Sayılar,Üslü İfadeler,Kritik,İşleniyor,70
+Utku,8,Matematik,Sayılar,Kareköklü İfadeler,Kritik,İşleniyor,30
 Utku,8,Matematik,Veri,Veri Analizi,Orta,Başlamadı,0
 Utku,8,Matematik,Olasılık,Basit Olayların Olma Olasılığı,Orta,Başlamadı,0
 Utku,8,Matematik,Cebir,Cebirsel İfadeler ve Özdeşlikler,Kritik,Başlamadı,0
@@ -92,3 +75,54 @@ Utku,8,Fen Bilimleri,Fiziksel Olaylar,Elektrik Yükleri ve Elektrik Enerjisi,Ort
 İpek,4,Türkçe,Dil Bilgisi,Kök ve Ek Kavramı (Yapım Ekleri),Orta,Başlamadı,0
 İpek,4,Türkçe,Dil Bilgisi,Basit ve Türemiş Sözcükler,Temel,Başlamadı,0
 İpek,4,Türkçe,Dil Bilgisi,Kurallı ve Devrik Cümle,Temel,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Üslü İfadeler ve İşlem Önceliği,Kritik,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Dağılma Özelliği ve Ortak Çarpan Parantezi,Orta,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Doğal Sayı Problemleri,Kritik,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Çarpanlar ve Katlar,Kritik,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Bölünebilme Kuralları,Kritik,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Asal Sayılar ve Asal Çarpanlar,Orta,Başlamadı,0
+Asya,6,Matematik,Sayılar ve İşlemler,Ortak Bölenler ve Katlar,Kritik,Başlamadı,0
+Asya,6,Matematik,Kümeler,Kümeler ve Kesişim-Birleşim,Temel,Başlamadı,0
+Asya,6,Matematik,Tam Sayılar,Tam Sayılar ve Sayı Doğrusunda Gösterim,Kritik,Başlamadı,0
+Asya,6,Matematik,Tam Sayılar,Tam Sayılarda Karşılaştırma ve Mutlak Değer,Kritik,Başlamadı,0
+Asya,6,Matematik,Kesirlerle İşlemler,Kesirleri Karşılaştırma ve Sıralama,Orta,Başlamadı,0
+Asya,6,Matematik,Kesirlerle İşlemler,Kesirlerle Toplama ve Çıkarma,Kritik,Başlamadı,0
+Asya,6,Matematik,Kesirlerle İşlemler,Kesirlerle Çarpma ve Bölme,Kritik,Başlamadı,0
+Asya,6,Matematik,Kesirlerle İşlemler,Kesir Problemleri,Kritik,Başlamadı,0
+Asya,6,Matematik,Ondalık Gösterim,Ondalık Gösterimleri Yuvarlama ve Çözümleme,Orta,Başlamadı,0
+Asya,6,Matematik,Ondalık Gösterim,Ondalık Gösterimle Çarpma ve Bölme,Kritik,Başlamadı,0
+Asya,6,Matematik,Ondalık Gösterim,Ondalık Gösterim Problemleri,Orta,Başlamadı,0
+Asya,6,Matematik,Oran,Oran Kavramı ve Birimli-Birimsiz Oran,Orta,Başlamadı,0
+Asya,6,Matematik,Cebir,Cebirsel İfadeler ve Değer Hesaplama,Kritik,Başlamadı,0
+Asya,6,Matematik,Veri İşleme,Veri Toplama ve İkili Sütun Grafiği,Temel,Başlamadı,0
+Asya,6,Matematik,Veri İşleme,Aritmetik Ortalama ve Açıklık,Orta,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,"Açılar (Komşu, Tümler, Bütünler, Ters)",Orta,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,Üçgende Alan ve Yükseklik,Kritik,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,Paralelkenarda Alan,Orta,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,Alan ve Arazi Ölçü Birimleri,Temel,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,Çember ve Çevre Uzunluğu,Orta,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,Dikdörtgenler Prizmasının Hacmi,Kritik,Başlamadı,0
+Asya,6,Matematik,Geometri ve Ölçme,Hacim ve Sıvı Ölçme İlişkisi,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Güneş Sistemi ve Tutulmalar,Güneş Sistemi ve Gezegenler,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Güneş Sistemi ve Tutulmalar,Güneş ve Ay Tutulmaları,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler,Destek ve Hareket Sistemi,Orta,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler,Sindirim Sistemi ve Enzimler,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler,Dolaşım Sistemi ve Kan Grupları,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler,Solunum Sistemi ve Gaz Alışverişi,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler,Boşaltım Sistemi ve Organları,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Kuvvet ve Hareket,Bileşke Kuvvet ve Net Kuvvet,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Kuvvet ve Hareket,Dengelenmiş ve Dengelenmemiş Kuvvetler,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Kuvvet ve Hareket,Sabit Süratli Hareket ve Grafikleri,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Madde ve Isı,Maddenin Tanecikli Yapısı,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Madde ve Isı,Yoğunluk ve Yoğunluk Hesaplama,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Madde ve Isı,Isı İletkenliği ve Yalıtım Malzemeleri,Orta,Başlamadı,0
+Asya,6,Fen Bilimleri,Madde ve Isı,Yakıtlar ve Yanma Ürünleri,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Ses ve Özellikleri,Sesin Yayılması ve Farklı Ortamlarda İletimi,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Ses ve Özellikleri,Sesin Sürati ve Işıkla Karşılaştırılması,Orta,Başlamadı,0
+Asya,6,Fen Bilimleri,Ses ve Özellikleri,Sesin Maddeyle Etkileşimi ve Ses Yalıtımı,Orta,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler ve Sağlığı,Denetleyici ve Düzenleyici Sistemler,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler ve Sağlığı,İç Salgı Bezleri ve Hormonlar,Kritik,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler ve Sağlığı,Duyu Organları ve Görevleri,Orta,Başlamadı,0
+Asya,6,Fen Bilimleri,Vücudumuzdaki Sistemler ve Sağlığı,Sistemlerin Sağlığı ve İlk Yardım,Temel,Başlamadı,0
+Asya,6,Fen Bilimleri,Elektriğin İletimi,İletken ve Yalıtkan Maddeler,Orta,Başlamadı,0
+Asya,6,Fen Bilimleri,Elektriğin İletimi,Elektriksel Direnç ve Bağlı Olduğu Faktörler,Kritik,Başlamadı,0
