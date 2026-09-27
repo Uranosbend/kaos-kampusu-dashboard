@@ -5,6 +5,9 @@ import plotly.express as px
 import os
 import urllib.parse
 from datetime import datetime
+import html
+import re
+import textwrap
 
 # ---------------------------------------------------------
 # SAYFA YAPILANDIRMASI
@@ -228,6 +231,328 @@ st.markdown("""
         margin-top: 12px;
         padding-top: 10px;
         border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Pedagojik Hafıza - Timeline & Editoryal Kart Tasarımı */
+    .timeline-container {
+        position: relative;
+        padding-left: 32px;
+        margin-top: 20px;
+        margin-bottom: 25px;
+    }
+
+    .timeline-container::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        bottom: 20px;
+        left: 11px;
+        width: 2px;
+        background: linear-gradient(180deg, #38bdf8 0%, #818cf8 40%, rgba(99, 102, 241, 0.15) 100%);
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 24px;
+    }
+
+    .timeline-node {
+        position: absolute;
+        left: -32px;
+        top: 22px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #0b1120;
+        border: 3px solid #38bdf8;
+        box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        transition: all 0.25s ease;
+    }
+
+    .timeline-item:hover .timeline-node {
+        transform: scale(1.15);
+        border-color: #c084fc;
+        box-shadow: 0 0 18px rgba(192, 132, 252, 0.8);
+    }
+
+    .pedagogic-card {
+        background: linear-gradient(135deg, rgba(20, 28, 48, 0.9) 0%, rgba(12, 17, 32, 0.96) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 22px 26px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(14px);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pedagogic-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #38bdf8 0%, #818cf8 100%);
+        opacity: 0.85;
+    }
+
+    .pedagogic-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.35);
+        box-shadow: 0 16px 36px -10px rgba(56, 189, 248, 0.2);
+    }
+
+    .pedagogic-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .pedagogic-date {
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .teacher-quote-box {
+        background: rgba(15, 23, 42, 0.7);
+        border-radius: 14px;
+        padding: 18px 22px;
+        border-left: 3px solid #818cf8;
+        margin-top: 10px;
+        position: relative;
+    }
+
+    .teacher-quote-author {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #818cf8;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .teacher-quote-text {
+        font-size: 15.5px;
+        line-height: 1.75;
+        color: #f1f5f9;
+        font-weight: 400;
+        margin: 0;
+        letter-spacing: 0.1px;
+    }
+
+    /* VIP HERO DIAGNOSTIC CARD */
+    .vip-hero-card {
+        background: radial-gradient(circle at 10% 20%, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.98) 100%);
+        border: 1px solid rgba(129, 140, 248, 0.3);
+        border-radius: 20px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.7), 0 0 25px -5px rgba(56, 189, 248, 0.15);
+        backdrop-filter: blur(16px);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vip-hero-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+    }
+
+    .vip-hero-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .vip-avatar-glow {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(99, 102, 241, 0.3) 100%);
+        border: 2px solid rgba(56, 189, 248, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+    }
+
+    .vip-panel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+
+    .vip-panel-box {
+        border-radius: 16px;
+        padding: 18px 20px;
+        position: relative;
+        backdrop-filter: blur(10px);
+        transition: all 0.25s ease;
+    }
+    .vip-panel-box:hover {
+        transform: translateY(-2px);
+    }
+
+    .vip-box-strength {
+        background: linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 78, 59, 0.15) 100%);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        box-shadow: 0 8px 24px -6px rgba(16, 185, 129, 0.15);
+    }
+    .vip-box-focus {
+        background: linear-gradient(145deg, rgba(244, 63, 94, 0.1) 0%, rgba(136, 19, 55, 0.15) 100%);
+        border: 1px solid rgba(244, 63, 94, 0.35);
+        box-shadow: 0 8px 24px -6px rgba(244, 63, 94, 0.15);
+    }
+    .vip-box-strategy {
+        background: linear-gradient(145deg, rgba(56, 189, 248, 0.1) 0%, rgba(30, 58, 138, 0.15) 100%);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        box-shadow: 0 8px 24px -6px rgba(56, 189, 248, 0.15);
+    }
+
+    .vip-box-title {
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .vip-pill-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .vip-pill {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .vip-pill-green {
+        background: rgba(16, 185, 129, 0.18);
+        color: #6ee7b7;
+        border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .vip-pill-red {
+        background: rgba(244, 63, 94, 0.18);
+        color: #fda4af;
+        border: 1px solid rgba(244, 63, 94, 0.4);
+    }
+    .vip-pill-blue {
+        background: rgba(56, 189, 248, 0.18);
+        color: #7dd3fc;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    /* VIP STATS GRID */
+    .vip-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .vip-stat-card {
+        background: linear-gradient(145deg, rgba(20, 28, 48, 0.85) 0%, rgba(12, 17, 32, 0.95) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 18px 20px;
+        box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+        transition: all 0.25s ease;
+        position: relative;
+    }
+    .vip-stat-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.4);
+        box-shadow: 0 12px 28px -6px rgba(56, 189, 248, 0.2);
+    }
+    .vip-stat-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #94a3b8;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .vip-stat-value {
+        font-size: 26px;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 6px;
+        letter-spacing: -0.5px;
+    }
+    .vip-stat-delta {
+        font-size: 12px;
+        color: #38bdf8;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* VIP PARENT COACHING BOX */
+    .vip-parent-coaching-box {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+        border: 1px dashed rgba(129, 140, 248, 0.4);
+        border-radius: 14px;
+        padding: 14px 18px;
+        margin-top: 14px;
+        font-size: 13px;
+        line-height: 1.6;
+        color: #cbd5e1;
+        position: relative;
+    }
+    .vip-parent-coaching-box b {
+        color: #fbbf24;
+    }
+
+    /* WATERMARK QUOTE */
+    .quote-watermark {
+        position: absolute;
+        right: 18px;
+        bottom: 12px;
+        font-size: 72px;
+        font-family: Georgia, serif;
+        line-height: 1;
+        color: rgba(255, 255, 255, 0.03);
+        pointer-events: none;
+        user-select: none;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -513,6 +838,147 @@ def fetch_tasks_data():
 df, is_live_connected = fetch_data()
 df_tasks, is_tasks_live_connected = fetch_tasks_data()
 
+# ---------------------------------------------------------
+# CANLI GOOGLE SHEETS VERİ ENTEGRASYONU (PEDAGOJİK HAFIZA & GÖZLEMLER)
+# ---------------------------------------------------------
+LIVE_OBSERVATIONS_URL = "https://docs.google.com/spreadsheets/d/10kmoJUbzHdXAFtY1kOy474SL2D9tZKNPz-h3QG3kg9c/gviz/tq?tqx=out:csv&sheet=" + urllib.parse.quote("Gözlemler")
+LOCAL_OBSERVATIONS_BACKUP = os.path.join(os.path.dirname(__file__), "gozlemler_yedek.csv")
+
+@st.cache_data(ttl=15)
+def fetch_observations_data():
+    """
+    Canlı Google E-Tablo 'Gözlemler' sayfasından pedagojik hafıza ve öğretmen notlarını çeker.
+    E-tablo henüz boşsa veya bağlantı hatası durumunda yerel yedek devreye girer.
+    """
+    is_live = False
+    df_obs = pd.DataFrame()
+    try:
+        df_live = pd.read_csv(LIVE_OBSERVATIONS_URL, encoding="utf-8")
+        df_live.columns = df_live.columns.str.strip()
+        is_live = True
+        if not df_live.empty:
+            df_obs = df_live
+        else:
+            # E-tablo henüz yeni açılmış ve boşsa örnek/yerel yedeğe bak
+            if os.path.exists(LOCAL_OBSERVATIONS_BACKUP):
+                try:
+                    df_obs = pd.read_csv(LOCAL_OBSERVATIONS_BACKUP, encoding="utf-8-sig", on_bad_lines='skip')
+                except Exception:
+                    df_obs = pd.read_csv(LOCAL_OBSERVATIONS_BACKUP, encoding="utf-8", on_bad_lines='skip')
+            else:
+                df_obs = df_live
+    except Exception:
+        if os.path.exists(LOCAL_OBSERVATIONS_BACKUP):
+            try:
+                df_obs = pd.read_csv(LOCAL_OBSERVATIONS_BACKUP, encoding="utf-8-sig", on_bad_lines='skip')
+            except Exception:
+                df_obs = pd.read_csv(LOCAL_OBSERVATIONS_BACKUP, encoding="utf-8", on_bad_lines='skip')
+        else:
+            df_obs = pd.DataFrame(columns=["Tarih", "Öğrenci", "Ders", "Etiket", "Öğretmen Notu"])
+
+    if not df_obs.empty:
+        if len(df_obs.columns) == 5:
+            df_obs.columns = ["Tarih", "Öğrenci", "Ders", "Etiket", "Öğretmen Notu"]
+        else:
+            col_rename = {}
+            for col in df_obs.columns:
+                c = normalize_turkish_str(col)
+                if "tarih" in c or "date" in c:
+                    col_rename[col] = "Tarih"
+                elif "ogr" in c or "renci" in c or "enci" in c or "student" in c:
+                    col_rename[col] = "Öğrenci"
+                elif "ders" in c or "konu" in c:
+                    col_rename[col] = "Ders"
+                elif "etiket" in c or "kategori" in c or "tag" in c:
+                    col_rename[col] = "Etiket"
+                elif "not" in c or "gozlem" in c or "retmen" in c or "degerlendirme" in c:
+                    col_rename[col] = "Öğretmen Notu"
+            if col_rename:
+                df_obs = df_obs.rename(columns=col_rename)
+
+        for req in ["Tarih", "Öğrenci", "Ders", "Etiket", "Öğretmen Notu"]:
+            if req in df_obs.columns:
+                df_obs[req] = df_obs[req].fillna("").astype(str).str.strip()
+            else:
+                df_obs[req] = ""
+
+        if is_live and not df_obs.empty:
+            try:
+                df_obs.to_csv(LOCAL_OBSERVATIONS_BACKUP, index=False, encoding="utf-8-sig")
+            except Exception:
+                pass
+
+    return df_obs, is_live
+
+df_obs, is_obs_live_connected = fetch_observations_data()
+
+def get_tag_badge_html(tag: str) -> str:
+    """Etiketin anlamsal önemine göre modern renkli bir badge HTML'i üretir."""
+    tag_clean = tag.strip()
+    if not tag_clean:
+        return ""
+    tag_lower = tag_clean.lower()
+    
+    if any(k in tag_lower for k in ["analitik", "strateji", "mantık", "metot", "problem", "kavram"]):
+        bg = "rgba(129, 140, 248, 0.16)"
+        color = "#818cf8"
+        border = "rgba(129, 140, 248, 0.35)"
+        icon = "💡"
+    elif any(k in tag_lower for k in ["başarı", "kavrama", "tebrik", "özgüven", "güçlü", "motivasyon", "ilerleme"]):
+        bg = "rgba(16, 185, 129, 0.16)"
+        color = "#34d399"
+        border = "rgba(16, 185, 129, 0.35)"
+        icon = "🌟"
+    elif any(k in tag_lower for k in ["dikkat", "odak", "rutin", "disiplin", "hız", "ödev", "pratik"]):
+        bg = "rgba(245, 158, 11, 0.16)"
+        color = "#fbbf24"
+        border = "rgba(245, 158, 11, 0.35)"
+        icon = "🎯"
+    elif any(k in tag_lower for k in ["eksik", "yanılgı", "kritik", "uyarı", "tekrar", "destek"]):
+        bg = "rgba(244, 63, 94, 0.16)"
+        color = "#fb7185"
+        border = "rgba(244, 63, 94, 0.35)"
+        icon = "⚠️"
+    else:
+        bg = "rgba(56, 189, 248, 0.16)"
+        color = "#38bdf8"
+        border = "rgba(56, 189, 248, 0.35)"
+        icon = "🔖"
+        
+    return f'<span class="badge" style="background: {bg}; color: {color}; border: 1px solid {border}; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px;">{icon} {tag_clean}</span>'
+
+def get_lesson_badge_html(lesson: str) -> str:
+    """Ders adına göre zarif bir ikon ve stil rozeti üretir."""
+    lesson_clean = lesson.strip()
+    if not lesson_clean:
+        return ""
+    l_lower = lesson_clean.lower()
+    if "matematik" in l_lower:
+        icon = "📐"
+        color = "#38bdf8"
+        bg = "rgba(56, 189, 248, 0.1)"
+        border = "rgba(56, 189, 248, 0.25)"
+    elif "fen" in l_lower:
+        icon = "🔬"
+        color = "#a78bfa"
+        bg = "rgba(167, 139, 250, 0.1)"
+        border = "rgba(167, 139, 250, 0.25)"
+    elif "rehberlik" in l_lower or "gelişim" in l_lower or "koçluk" in l_lower:
+        icon = "🧭"
+        color = "#34d399"
+        bg = "rgba(52, 211, 153, 0.1)"
+        border = "rgba(52, 211, 153, 0.25)"
+    else:
+        icon = "📚"
+        color = "#cbd5e1"
+        bg = "rgba(148, 163, 184, 0.1)"
+        border = "rgba(148, 163, 184, 0.25)"
+    return f'<span class="badge" style="background: {bg}; color: {color}; border: 1px solid {border}; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 12px;">{icon} {lesson_clean}</span>'
+
+def render_html(html_str: str):
+    """HTML içeriğini Markdown kod bloğu tuzağına düşmeden garantili olarak render eder."""
+    st.markdown(textwrap.dedent(html_str).strip(), unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # SIDEBAR (SOL MENÜ & FİLTRELER)
@@ -528,10 +994,18 @@ with st.sidebar:
     st.markdown("---")
 
     # Canlı Bağlantı Rozeti
-    if is_live_connected and is_tasks_live_connected:
-        st.success("🟢 Canlı Google Sheet Bağlı (Müfredat & Görevler)", icon="✅")
-    elif is_live_connected:
-        st.success("🟢 Canlı Google Sheet Bağlı", icon="✅")
+    live_sources = []
+    if is_live_connected:
+        live_sources.append("Müfredat")
+    if is_tasks_live_connected:
+        live_sources.append("Görevler")
+    if is_obs_live_connected:
+        live_sources.append("Gözlemler")
+    
+    if len(live_sources) == 3:
+        st.success("🟢 Canlı Google Sheet Bağlı (Müfredat, Görevler & Gözlemler)", icon="✅")
+    elif len(live_sources) > 0:
+        st.success(f"🟢 Canlı Google Sheet Bağlı ({', '.join(live_sources)})", icon="✅")
     else:
         st.info("🟡 Yerel Yedek Veri Devrede", icon="ℹ️")
 
@@ -557,7 +1031,15 @@ with st.sidebar:
                 break
 
     # Öğrenci Seçimi ve Yetkilendirme
-    students = sorted(df["Öğrenci"].dropna().unique().tolist()) if "Öğrenci" in df.columns and not df.empty else ["Asya", "Utku"]
+    all_students_set = set(["Asya", "Utku", "İpek"])
+    if "Öğrenci" in df.columns and not df.empty:
+        all_students_set.update(df["Öğrenci"].dropna().unique().tolist())
+    if "Ogrenci" in df_tasks.columns and not df_tasks.empty:
+        all_students_set.update(df_tasks["Ogrenci"].dropna().unique().tolist())
+    if "Öğrenci" in df_obs.columns and not df_obs.empty:
+        all_students_set.update(df_obs["Öğrenci"].dropna().unique().tolist())
+    all_students_set.discard("")
+    students = sorted(list(all_students_set))
 
     if url_student_param:
         # Veli Modu: URL'den gelen öğrenciye kilitlenir, selectbox kilitlenir
@@ -695,11 +1177,12 @@ st.markdown(f"""
 
 
 # ---------------------------------------------------------
-# ANA SEKMELER (MÜFREDAT VE AKTİF GÖREVLER)
+# ANA SEKMELER (MÜFREDAT, AKTİF GÖREVLER VE GELİŞİM GÜNLÜĞÜ)
 # ---------------------------------------------------------
-tab_mufredat, tab_gorevler = st.tabs([
+tab_mufredat, tab_gorevler, tab_gunluk = st.tabs([
     "📊 Müfredat ve İlerleme",
-    "📚 Aktif Görevler ve Ödevler"
+    "📚 Aktif Görevler ve Ödevler",
+    "🧠 Gelişim Günlüğü"
 ])
 
 
@@ -1085,3 +1568,154 @@ with tab_gorevler:
             mime="text/csv",
             use_container_width=True
         )
+
+
+# =========================================================
+# SEKME 3: PEDAGOJİK HAFIZA & GELİŞİM GÜNLÜĞÜ
+# =========================================================
+with tab_gunluk:
+    # 1. ÖĞRENCİ KİLİDİ: Aktif / Kilitli öğrencinin gözlemlerini dinamik olarak filtrele
+    if not df_obs.empty and "Öğrenci" in df_obs.columns:
+        student_obs = df_obs[df_obs["Öğrenci"].apply(normalize_turkish_str) == normalize_turkish_str(selected_student)].copy()
+    else:
+        student_obs = pd.DataFrame(columns=["Tarih", "Öğrenci", "Ders", "Etiket", "Öğretmen Notu"])
+
+    # 2. KRONOLOJİK SIRALAMA: En güncel tarihler en üstte
+    if not student_obs.empty and "Tarih" in student_obs.columns:
+        student_obs["_tarih_dt"] = pd.to_datetime(student_obs["Tarih"], errors="coerce", dayfirst=True)
+        student_obs = student_obs.sort_values(by=["_tarih_dt", "Tarih"], ascending=[False, False]).drop(columns=["_tarih_dt"])
+
+    # 3. İSTATİSTİKLER VE PEDAGOJİK METRİK KARTLARI
+    total_obs_count = len(student_obs)
+    latest_obs_date = student_obs["Tarih"].iloc[0] if total_obs_count > 0 else "-"
+    
+    top_tag = "Henüz Yok"
+    top_tag_count = 0
+    if total_obs_count > 0 and "Etiket" in student_obs.columns:
+        valid_tags = student_obs["Etiket"].replace("", pd.NA).dropna()
+        if not valid_tags.empty:
+            tag_counts = valid_tags.value_counts()
+            if not tag_counts.empty:
+                top_tag = tag_counts.index[0]
+                top_tag_count = tag_counts.iloc[0]
+
+    o_col1, o_col2, o_col3 = st.columns(3)
+    with o_col1:
+        st.metric(
+            label="Toplam Pedagojik Gözlem",
+            value=f"{total_obs_count} Kayıt",
+            delta=f"{selected_student} Akademik Arşivi"
+        )
+    with o_col2:
+        st.metric(
+            label="Son Değerlendirme Tarihi",
+            value=f"{latest_obs_date}",
+            delta="En Güncel Değerlendirme" if total_obs_count > 0 else "Kayıt Bekleniyor"
+        )
+    with o_col3:
+        st.metric(
+            label="Öne Çıkan Gözlem Alanı",
+            value=f"{top_tag}",
+            delta=f"{top_tag_count} Gözlem Notu" if top_tag != "Henüz Yok" else "Kayıt Bekleniyor"
+        )
+
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
+
+    # 4. HIZLI FİLTRELEME VE CANLI ARAMA ÇUBUĞU
+    f1, f2, f3 = st.columns([1.5, 1.5, 2])
+    with f1:
+        obs_courses = ["Tümü"] + sorted([c for c in student_obs["Ders"].replace("", pd.NA).dropna().unique().tolist() if c]) if not student_obs.empty else ["Tümü"]
+        selected_obs_course = st.selectbox("📚 Ders Filtresi", options=obs_courses, key="obs_course_filter")
+    with f2:
+        obs_tags = ["Tümü"] + sorted([t for t in student_obs["Etiket"].replace("", pd.NA).dropna().unique().tolist() if t]) if not student_obs.empty else ["Tümü"]
+        selected_obs_tag = st.selectbox("🏷️ Etiket Filtresi", options=obs_tags, key="obs_tag_filter")
+    with f3:
+        search_query = st.text_input("🔍 Notlarda Arama Yap...", placeholder="Örn: karekök, ebob, cebirsel, basamak...", key="obs_search_query")
+
+    # Filtreleri uygula
+    filtered_obs = student_obs.copy()
+    if selected_obs_course != "Tümü" and not filtered_obs.empty:
+        filtered_obs = filtered_obs[filtered_obs["Ders"] == selected_obs_course]
+    if selected_obs_tag != "Tümü" and not filtered_obs.empty:
+        filtered_obs = filtered_obs[filtered_obs["Etiket"] == selected_obs_tag]
+    if search_query and not filtered_obs.empty:
+        q = search_query.strip().lower()
+        filtered_obs = filtered_obs[
+            filtered_obs["Öğretmen Notu"].astype(str).str.lower().str.contains(q, na=False) |
+            filtered_obs["Etiket"].astype(str).str.lower().str.contains(q, na=False) |
+            filtered_obs["Ders"].astype(str).str.lower().str.contains(q, na=False)
+        ]
+
+    st.markdown("---")
+
+    # 5. DİKEY ZAMAN AKIŞI (TIMELINE) & EDİTORYAL KARTLAR
+    if filtered_obs.empty:
+        if total_obs_count == 0:
+            render_html(f"""
+            <div class="info-box" style="border-left-color: #818cf8; text-align: center; padding: 36px 24px; background: rgba(15, 23, 42, 0.7); border-radius: 16px;">
+                <div style="font-size: 42px; margin-bottom: 12px;">🌱</div>
+                <h3 style="color: #818cf8; margin: 0 0 8px 0; font-size: 20px; font-weight: 700;">Henüz Kayıtlı Gözlem Bulunmuyor</h3>
+                <p style="color: #94a3b8; margin: 0 auto; max-width: 520px; font-size: 14px; line-height: 1.6;">
+                    <b>{selected_student}</b> için Google E-Tablo <i>Gözlemler</i> sekmesine yeni pedagojik değerlendirmeler eklendikçe burada şık bir editoryal zaman akışı olarak listelenecektir.
+                </p>
+            </div>
+            """)
+        else:
+            st.info(f"Seçilen filtrelere uygun ({selected_obs_course} / {selected_obs_tag}) pedagojik not bulunamadı.")
+    else:
+        st.markdown(f"#### 🧠 {selected_student} - Pedagojik Gözlem ve Gelişim Akışı ({len(filtered_obs)} Kayıt)")
+        
+        # Timeline kapsayıcısı
+        render_html('<div class="timeline-container">')
+
+        for idx, row in filtered_obs.iterrows():
+            date_val = str(row.get("Tarih", "-")).strip()
+            lesson_val = str(row.get("Ders", "")).strip()
+            tag_val = str(row.get("Etiket", "Genel")).strip()
+            teacher_note = str(row.get("Öğretmen Notu", "")).strip()
+
+            safe_note = html.escape(teacher_note).replace("\n", "<br>")
+            safe_note = re.sub(r'\*\*(.*?)\*\*', r'<b style="color: #38bdf8;">\1</b>', safe_note)
+
+            badge_tag_html = get_tag_badge_html(tag_val)
+            badge_lesson_html = get_lesson_badge_html(lesson_val) if lesson_val else ""
+
+            render_html(f"""
+            <div class="timeline-item">
+                <div class="timeline-node"></div>
+                <div class="pedagogic-card">
+                    <div class="pedagogic-header">
+                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <span class="pedagogic-date">📅 {date_val}</span>
+                            {badge_lesson_html}
+                        </div>
+                        <div>
+                            {badge_tag_html}
+                        </div>
+                    </div>
+                    <div class="teacher-quote-box">
+                        <div class="teacher-quote-author">
+                            <span>👩‍🏫 ÖĞRETMEN DEĞERLENDİRMESİ & PEDAGOJİK GÖZLEM</span>
+                        </div>
+                        <p class="teacher-quote-text">
+                            {safe_note}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            """)
+
+        render_html('</div>')
+
+        # 6. CSV İNDİRME BUTONU
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        csv_obs_bytes = filtered_obs.to_csv(index=False, encoding="utf-8-sig").encode("utf-8-sig")
+        st.download_button(
+            label=f"📥 {selected_student} Gelişim Günlüğünü İndir (CSV)",
+            data=csv_obs_bytes,
+            file_name=f"{selected_student}_gelisim_gunlugu.csv",
+            mime="text/csv",
+            use_container_width=True,
+            help=f"{selected_student} öğrencisinin gelişim günlüğünü CSV olarak indirir."
+        )
+
