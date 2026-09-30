@@ -663,6 +663,25 @@ def normalize_turkish_str(s: str) -> str:
         return ""
     return str(s).strip().replace("İ", "i").replace("I", "ı").replace("ı", "i").lower()
 
+def canonicalize_student_name(val: str) -> str:
+    """
+    Öğrenci isimlerindeki Türkçe karakter (İ/I, i/ı), büyük/küçük harf veya boşluk
+    farklılıklarını standart kanonik öğrenci ismine (Asya, Utku, İpek) dönüştürür.
+    Böylece Google Sheets'te 'Ipek' veya 'İpek' yazılmasından kaynaklı çift öğrenci
+    oluşması ve veri ayrışması kalıcı olarak engellenir.
+    """
+    if not val or pd.isna(val):
+        return ""
+    s = str(val).strip()
+    norm = normalize_turkish_str(s)
+    if "asya" in norm:
+        return "Asya"
+    elif "utku" in norm:
+        return "Utku"
+    elif "ipek" in norm:
+        return "İpek"
+    return s
+
 def normalize_task_status(val: str) -> str:
     """Görev durumunu emoji ve serbest metin varyasyonlarından arındırıp standartlaştırır."""
     if not val or pd.isna(val):
@@ -742,6 +761,10 @@ def fetch_data():
     # Asya'nın 6. sınıf müfredatını garanti altına al
     df = ensure_asya_6th_grade(df)
 
+    # Öğrenci isimlerini kanonik hale getir (Asya, Utku, İpek)
+    if not df.empty and "Öğrenci" in df.columns:
+        df["Öğrenci"] = df["Öğrenci"].fillna("").astype(str).apply(canonicalize_student_name)
+
     # Güncel tabloyu yerel yedek dosyasına kaydet
     try:
         df.to_csv(LOCAL_BACKUP_CSV, index=False, encoding="utf-8-sig")
@@ -819,7 +842,7 @@ def fetch_tasks_data():
         if "Durum" in df_tasks.columns:
             df_tasks["Durum"] = df_tasks["Durum"].apply(normalize_task_status)
         if "Ogrenci" in df_tasks.columns:
-            df_tasks["Ogrenci"] = df_tasks["Ogrenci"].fillna("").astype(str).str.strip()
+            df_tasks["Ogrenci"] = df_tasks["Ogrenci"].fillna("").astype(str).apply(canonicalize_student_name)
         if "Tarih" in df_tasks.columns:
             df_tasks["Tarih"] = df_tasks["Tarih"].fillna("").astype(str).str.strip()
         if "Gorev Tipi" in df_tasks.columns:
@@ -901,6 +924,9 @@ def fetch_observations_data():
                 df_obs[req] = df_obs[req].fillna("").astype(str).str.strip()
             else:
                 df_obs[req] = ""
+
+        if "Öğrenci" in df_obs.columns:
+            df_obs["Öğrenci"] = df_obs["Öğrenci"].apply(canonicalize_student_name)
 
         if is_live and not df_obs.empty:
             try:
@@ -1038,17 +1064,23 @@ with st.sidebar:
         all_students_set.update(df_tasks["Ogrenci"].dropna().unique().tolist())
     if "Öğrenci" in df_obs.columns and not df_obs.empty:
         all_students_set.update(df_obs["Öğrenci"].dropna().unique().tolist())
-    all_students_set.discard("")
-    students = sorted(list(all_students_set))
+    
+    canonical_students = set()
+    for s in all_students_set:
+        c_name = canonicalize_student_name(s)
+        if c_name:
+            canonical_students.add(c_name)
+    students = sorted(list(canonical_students))
 
     if url_student_param:
+        canonical_url_param = canonicalize_student_name(url_student_param)
         # Veli Modu: URL'den gelen öğrenciye kilitlenir, selectbox kilitlenir
         matched_student = None
         for s in students:
-            if s.lower() == url_student_param.lower():
+            if normalize_turkish_str(s) == normalize_turkish_str(canonical_url_param):
                 matched_student = s
                 break
-        selected_student = matched_student if matched_student else url_student_param
+        selected_student = matched_student if matched_student else canonical_url_param
         is_parent_mode = True
 
         st.success(f"👤 Öğrenci: **{selected_student}** (Veli Modu)", icon="🔒")
@@ -1064,7 +1096,7 @@ with st.sidebar:
     st.markdown("---")
 
     # Müfredat Filtreleri
-    student_records = df[df["Öğrenci"] == selected_student] if "Öğrenci" in df.columns else pd.DataFrame()
+    student_records = df[df["Öğrenci"].apply(normalize_turkish_str) == normalize_turkish_str(selected_student)] if "Öğrenci" in df.columns else pd.DataFrame()
     courses = ["Tümü"] + sorted(student_records["Ders"].dropna().unique().tolist()) if "Ders" in student_records.columns else ["Tümü"]
     selected_course = st.selectbox("📚 Ders Filtresi (Müfredat)", options=courses)
 
@@ -1113,7 +1145,7 @@ with st.sidebar:
 # ---------------------------------------------------------
 # MÜFREDAT HESAPLAMALARI & METRİKLER
 # ---------------------------------------------------------
-student_df = df[df["Öğrenci"] == selected_student].copy() if "Öğrenci" in df.columns else pd.DataFrame()
+student_df = df[df["Öğrenci"].apply(normalize_turkish_str) == normalize_turkish_str(selected_student)].copy() if "Öğrenci" in df.columns else pd.DataFrame()
 
 filtered_df = student_df.copy()
 if not filtered_df.empty:
@@ -1125,8 +1157,13 @@ if not filtered_df.empty:
         filtered_df = filtered_df[filtered_df["Durum"] == selected_status]
 
 # Sınıf Bilgisi
-raw_grade = student_df["Sınıf"].iloc[0] if not student_df.empty and "Sınıf" in student_df.columns else "6"
-grade_label = f"{raw_grade}. Sınıf"
+STUDENT_DEFAULT_GRADES = {"Asya": "6", "Utku": "8", "İpek": "4"}
+if not student_df.empty and "Sınıf" in student_df.columns:
+    raw_grade = str(student_df["Sınıf"].iloc[0]).replace(".0", "").strip()
+else:
+    raw_grade = STUDENT_DEFAULT_GRADES.get(selected_student, "-")
+
+grade_label = f"{raw_grade}. Sınıf" if str(raw_grade) != "-" else "Sınıf Belirtilmedi"
 if str(raw_grade) == "8":
     sub_grade_label = "LGS Hazırlık Grubu"
 elif str(raw_grade) == "6":
@@ -1136,7 +1173,7 @@ elif str(raw_grade) == "4":
 elif str(raw_grade) == "7":
     sub_grade_label = "Ortaokul Ara Sınıf / LGS Altyapı"
 else:
-    sub_grade_label = "Ortaokul Müfredatı"
+    sub_grade_label = "Temel Eğitim & Takip Müfredatı"
 
 total_topics = len(student_df)
 course_counts = student_df["Ders"].value_counts().to_dict() if "Ders" in student_df.columns else {}

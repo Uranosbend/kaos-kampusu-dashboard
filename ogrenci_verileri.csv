@@ -69,9 +69,9 @@ Utku,8,Fen Bilimleri,Madde,Madde ve Endüstri,Kritik,Başlamadı,0
 Utku,8,Fen Bilimleri,Fiziksel Olaylar,Basit Makineler,Kritik,Başlamadı,0
 Utku,8,Fen Bilimleri,Canlılar,Enerji Dönüşümleri ve Çevre,Kritik,Başlamadı,0
 Utku,8,Fen Bilimleri,Fiziksel Olaylar,Elektrik Yükleri ve Elektrik Enerjisi,Orta,Başlamadı,0
-İpek,4,Matematik,Doğal Sayılar,4-5-6 Basamaklı Doğal Sayılar ve Okunuşları,Temel,Başlamadı,0
-İpek,4,Matematik,Doğal Sayılar,Basamak ve Bölük Kavramı ile Basamak Değeri,Kritik,Başlamadı,0
-İpek,4,Matematik,Doğal Sayılar,En Yakın Onluğa ve Yüzlüğe Yuvarlama,Orta,Başlamadı,0
+İpek,4,Matematik,Doğal Sayılar,4-5-6 Basamaklı Doğal Sayılar ve Okunuşları,Temel,İşleniyor,40
+İpek,4,Matematik,Doğal Sayılar,Basamak ve Bölük Kavramı ile Basamak Değeri,Kritik,İşleniyor,40
+İpek,4,Matematik,Doğal Sayılar,En Yakın Onluğa ve Yüzlüğe Yuvarlama,Orta,İşleniyor,60
 İpek,4,Matematik,Doğal Sayılar,Doğal Sayıları Sıralama ve Karşılaştırma,Temel,Başlamadı,0
 İpek,4,Matematik,Doğal Sayılar,Sayı ve Şekil Örüntüleri,Temel,Başlamadı,0
 İpek,4,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Toplama İşlemi,Kritik,Başlamadı,0
@@ -115,7 +115,7 @@ Utku,8,Fen Bilimleri,Fiziksel Olaylar,Elektrik Yükleri ve Elektrik Enerjisi,Ort
 İpek,4,Türkçe,Cümlede Anlam,Öznel ve Nesnel Yargılar,Kritik,Başlamadı,0
 İpek,4,Türkçe,Cümlede Anlam,Karşılaştırma ve Benzetme Cümleleri,Orta,Başlamadı,0
 İpek,4,Türkçe,Cümlede Anlam,Duygusal ve Abartılı İfadeler,Temel,Başlamadı,0
-İpek,4,Türkçe,Yazım Kuralları,Büyük Harflerin Kullanıldığı Yerler,Kritik,Başlamadı,0
+İpek,4,Türkçe,Yazım Kuralları,Büyük Harflerin Kullanıldığı Yerler,Kritik,İşleniyor,50
 İpek,4,Türkçe,Yazım Kuralları,de ve ki Bağlaçlarının Yazımı,Kritik,Başlamadı,0
 İpek,4,Türkçe,Yazım Kuralları,mi Soru Ekinin Yazımı,Kritik,Başlamadı,0
 İpek,4,Türkçe,Yazım Kuralları,Sayıların ve Kısaltmaların Yazımı,Orta,Başlamadı,0
