@@ -8,6 +8,7 @@ from datetime import datetime
 import html
 import re
 import textwrap
+import base64
 
 # ---------------------------------------------------------
 # SAYFA YAPILANDIRMASI
@@ -554,6 +555,209 @@ st.markdown("""
         pointer-events: none;
         user-select: none;
     }
+
+    /* ========================================================= */
+    /* VIP KARAKTER GELİŞİMİ & SEVİYE BARİ STİLLERİ              */
+    /* ========================================================= */
+    .gamification-hero-card {
+        border-radius: 22px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(16px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gamification-hero-card:hover {
+        transform: translateY(-2px);
+    }
+    .gamification-hero-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+        pointer-events: none;
+        border-radius: 50%;
+    }
+    .gamification-card-inner {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+    .gamification-avatar-wrapper {
+        position: relative;
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0b1120;
+        animation: avatar-pulse-glow 3.5s infinite alternate ease-in-out;
+    }
+    @keyframes avatar-pulse-glow {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.03); }
+    }
+    .gamification-avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+    }
+    .gamification-avatar-fallback {
+        font-size: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .gamification-lvl-badge {
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        padding: 3px 12px;
+        border-radius: 14px;
+        white-space: nowrap;
+        text-transform: uppercase;
+    }
+    .gamification-content {
+        flex: 1;
+        min-width: 290px;
+    }
+    .gamification-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+    .gamification-theme-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        margin-bottom: 6px;
+    }
+    .gamification-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0;
+        line-height: 1.25;
+        letter-spacing: -0.3px;
+    }
+    .gamification-xp-pill {
+        border-radius: 14px;
+        padding: 8px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .gamification-xp-number {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+    .gamification-bar-section {
+        background: rgba(10, 16, 29, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 12px 16px;
+        margin-bottom: 14px;
+    }
+    .gamification-bar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .gamification-progress-outer {
+        height: 14px;
+        background: rgba(2, 6, 23, 0.85);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .gamification-progress-fill {
+        height: 100%;
+        border-radius: 9px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+    .gamification-progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+        background-size: 200% 100%;
+        animation: progress-shimmer 2.5s infinite linear;
+    }
+    @keyframes progress-shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    .gamification-bar-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .gamification-meta-grid {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .gamification-meta-chip {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .gamification-chip-icon {
+        font-size: 18px;
+    }
+    .gamification-chip-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #94a3b8;
+        letter-spacing: 0.5px;
+    }
+    .gamification-chip-value {
+        font-size: 13px;
+        font-weight: 800;
+        color: #f1f5f9;
+    }
+    .gamification-tip-inline {
+        flex: 1;
+        min-width: 240px;
+        background: rgba(30, 41, 59, 0.4);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #cbd5e1;
+        line-height: 1.5;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -1003,7 +1207,215 @@ def get_lesson_badge_html(lesson: str) -> str:
 
 def render_html(html_str: str):
     """HTML içeriğini Markdown kod bloğu tuzağına düşmeden garantili olarak render eder."""
-    st.markdown(textwrap.dedent(html_str).strip(), unsafe_allow_html=True)
+    clean_lines = [line.strip() for line in html_str.strip().split("\n")]
+    clean_html = "\n".join(clean_lines)
+    st.markdown(clean_html, unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------
+# ÖĞRENCİ KARAKTER GELİŞİMİ & GAMIFICATION YAPILANDIRMASI
+# ---------------------------------------------------------
+STUDENT_GAMIFICATION_CONFIG = {
+    "Utku": {
+        "title": "Minecraft Kahramanı",
+        "avatar_file": "utku.jpg",
+        "theme_tag": "⛏️ Minecraft Steve Modu",
+        "glow_color": "#38bdf8",
+        "border_color": "#0284c7",
+        "gradient_card": "linear-gradient(135deg, rgba(8, 28, 48, 0.95) 0%, rgba(12, 18, 30, 0.98) 100%)",
+        "progress_gradient": "linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #34d399 100%)",
+        "accent_text": "#38bdf8",
+        "badge_bg": "rgba(56, 189, 248, 0.18)",
+        "badge_border": "rgba(56, 189, 248, 0.4)",
+        "default_avatar_icon": "⛏️",
+        "next_level_tip": "Yeni bir ödevini tamamlayarak veya kritik konularda ustalığını yükselterek hemen seviye atlayabilirsin!",
+        "ranks": [
+            (1, "Ahşap Kazma Çırağı", 0, 300),
+            (2, "Taş Kılıç Savaşçısı", 300, 700),
+            (3, "Demir Zırhlı Madenci", 700, 1200),
+            (4, "Kızıltaş Mühendisi", 1200, 1800),
+            (5, "Elmas Muhafızı", 1800, 2500),
+            (6, "Nether Fatihi", 2500, 3300),
+            (7, "Ender Ejderhası Avcısı", 3300, 4200),
+            (8, "Efsanevi Blok Ustası", 4200, 5200),
+            (9, "Kadim Maden Lordu", 5200, 6500),
+            (10, "Minecraft Yüce Şampiyonu", 6500, 10000),
+        ]
+    },
+    "Asya": {
+        "title": "Manifest Kızı",
+        "avatar_file": "asya.jpg",
+        "theme_tag": "✨ Manifest Kızı • Yıldız Aura",
+        "glow_color": "#c084fc",
+        "border_color": "#a855f7",
+        "gradient_card": "linear-gradient(135deg, rgba(38, 18, 56, 0.95) 0%, rgba(18, 12, 32, 0.98) 100%)",
+        "progress_gradient": "linear-gradient(90deg, #c084fc 0%, #f472b6 50%, #fbbf24 100%)",
+        "accent_text": "#e879f9",
+        "badge_bg": "rgba(192, 132, 252, 0.18)",
+        "badge_border": "rgba(192, 132, 252, 0.4)",
+        "default_avatar_icon": "✨",
+        "next_level_tip": "Pozitif odaklanma, tamamlanan günlük ödevler ve konu ustalıkları seni bir sonraki unvana taşıyacak!",
+        "ranks": [
+            (1, "Işıltılı Kıvılcım", 0, 300),
+            (2, "Kristal Aura Kaşifi", 300, 700),
+            (3, "Zihin & Odak Mimarı", 700, 1200),
+            (4, "Yıldız Frekansı Ustası", 1200, 1800),
+            (5, "Kozmik Bilge Kaşif", 1800, 2500),
+            (6, "Manyetik Zeka İkonu", 2500, 3300),
+            (7, "Sonsuz Potansiyel Şampiyonu", 3300, 4200),
+            (8, "Manifest Kraliçesi", 4200, 5200),
+            (9, "Işık Çağı Rehberi", 5200, 6500),
+            (10, "Evrensel Başarı Efsanesi", 6500, 10000),
+        ]
+    },
+    "İpek": {
+        "title": "Sevimli Pati",
+        "avatar_file": "ipek.jpg",
+        "theme_tag": "🐾 Sevimli Pati • Kaşif Kedi",
+        "glow_color": "#fb7185",
+        "border_color": "#f43f5e",
+        "gradient_card": "linear-gradient(135deg, rgba(46, 18, 28, 0.95) 0%, rgba(24, 10, 18, 0.98) 100%)",
+        "progress_gradient": "linear-gradient(90deg, #fb7185 0%, #f43f5e 50%, #fbbf24 100%)",
+        "accent_text": "#fb7185",
+        "badge_bg": "rgba(251, 113, 133, 0.18)",
+        "badge_border": "rgba(251, 113, 133, 0.4)",
+        "default_avatar_icon": "🐱",
+        "next_level_tip": "Her tamamlanan ödev ve öğrenilen yeni konu minik patinin bilgeliğini ve seviyesini katlayacak!",
+        "ranks": [
+            (1, "Minik Yumak", 0, 300),
+            (2, "Neşeli Pati", 300, 700),
+            (3, "Meraklı Kaşif Kedi", 700, 1200),
+            (4, "Zeki Bıyık Ustası", 1200, 1800),
+            (5, "Cesur Pati Kahramanı", 1800, 2500),
+            (6, "Sihirli Kedi Muhafızı", 2500, 3300),
+            (7, "Yıldız Patisi Bilgesi", 3300, 4200),
+            (8, "Kedi Krallığı Şampiyonu", 4200, 5200),
+            (9, "Pati Kraliçesi", 5200, 6500),
+            (10, "Efsanevi Sevimli Pati", 6500, 10000),
+        ]
+    }
+}
+
+@st.cache_data
+def get_avatar_base64(avatar_filename: str) -> str:
+    """Avatar görselini Base64 formatında yükler ve önbelleğe alır (Path traversal korumalı)."""
+    if not avatar_filename:
+        return ""
+    safe_filename = os.path.basename(str(avatar_filename).strip())
+    avatar_path = os.path.join(os.path.dirname(__file__), "assets", "avatars", safe_filename)
+    if os.path.exists(avatar_path):
+        try:
+            with open(avatar_path, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode("utf-8")
+                return f"data:image/jpeg;base64,{encoded}"
+        except Exception:
+            return ""
+    return ""
+
+def calculate_gamification_profile(student_name: str, student_df: pd.DataFrame, df_tasks: pd.DataFrame, df_obs: pd.DataFrame):
+    """Öğrencinin müfredat, ödev ve gözlem verilerine göre XP, Seviye ve Karakter profilini hesaplar."""
+    norm_name = normalize_turkish_str(student_name)
+    matched_key = "Utku" if "utku" in norm_name else ("Asya" if "asya" in norm_name else ("İpek" if "ipek" in norm_name else student_name))
+    cfg = STUDENT_GAMIFICATION_CONFIG.get(matched_key, STUDENT_GAMIFICATION_CONFIG["Utku"])
+
+    # 1. Müfredat XP
+    topic_xp = 0
+    completed_topics = 0
+    in_progress_topics = 0
+    total_mastery_pts = 0
+
+    if not student_df.empty:
+        for _, row in student_df.iterrows():
+            durum = str(row.get("Durum", "")).strip()
+            onem = str(row.get("Stratejik Önem", "Temel")).strip()
+            ustalik_val = row.get("Ustalık Oranı (%)", 0)
+            try:
+                ustalik = int(ustalik_val) if pd.notna(ustalik_val) else 0
+            except Exception:
+                ustalik = 0
+
+            norm_durum = durum.casefold().replace("ı", "i").replace("İ", "i")
+            if any(w in norm_durum for w in ["tamam", "bitti", "done"]):
+                completed_topics += 1
+                base_val = 120
+                if "kritik" in onem.lower():
+                    base_val += 30
+                topic_xp += base_val
+            elif any(w in norm_durum for w in ["devam", "islen", "progress"]):
+                in_progress_topics += 1
+                topic_xp += 40
+
+            if ustalik > 0:
+                total_mastery_pts += ustalik
+
+    curriculum_total_xp = topic_xp + total_mastery_pts
+
+    # 2. Görevler / Ödevler XP
+    tasks_xp = 0
+    completed_tasks = 0
+    in_progress_tasks = 0
+    if not df_tasks.empty and "Ogrenci" in df_tasks.columns:
+        st_tasks = df_tasks[df_tasks["Ogrenci"].apply(normalize_turkish_str) == norm_name]
+        for _, row in st_tasks.iterrows():
+            d = str(row.get("Durum", "")).strip().casefold().replace("ı", "i").replace("İ", "i")
+            if any(w in d for w in ["tamam", "bitti", "done", "yapildi"]):
+                completed_tasks += 1
+                tasks_xp += 100
+            elif any(w in d for w in ["devam", "suruyor", "progress"]):
+                in_progress_tasks += 1
+                tasks_xp += 35
+
+    # 3. Pedagojik Gözlemler XP
+    obs_xp = 0
+    obs_count = 0
+    if not df_obs.empty and "Öğrenci" in df_obs.columns:
+        st_obs = df_obs[df_obs["Öğrenci"].apply(normalize_turkish_str) == norm_name]
+        obs_count = len(st_obs)
+        obs_xp = obs_count * 50
+
+    total_xp = curriculum_total_xp + tasks_xp + obs_xp
+
+    # Seviye ve Unvan Belirleme
+    ranks = cfg["ranks"]
+    current_level = 1
+    current_title = ranks[0][1]
+    min_xp = 0
+    max_xp = ranks[0][3]
+
+    for lvl, title, low, high in ranks:
+        if total_xp >= low:
+            current_level = lvl
+            current_title = title
+            min_xp = low
+            max_xp = high
+
+    if current_level == len(ranks) and total_xp >= max_xp:
+        progress_pct = 100
+        needed_xp = 0
+    else:
+        span = max(1, max_xp - min_xp)
+        curr_in_level = max(0, total_xp - min_xp)
+        progress_pct = min(100, max(0, int((curr_in_level / span) * 100)))
+        needed_xp = max(0, max_xp - total_xp)
+
+    return {
+        "student_key": matched_key,
+        "config": cfg,
+        "total_xp": total_xp,
+        "current_level": current_level,
+        "current_title": current_title,
+        "min_xp": min_xp,
+        "max_xp": max_xp,
+        "progress_pct": progress_pct,
+        "needed_xp": needed_xp,
+        "curriculum_xp": curriculum_total_xp,
+        "tasks_xp": tasks_xp,
+        "obs_xp": obs_xp,
+        "completed_topics": completed_topics,
+        "in_progress_topics": in_progress_topics,
+        "completed_tasks": completed_tasks,
+        "obs_count": obs_count
+    }
 
 
 # ---------------------------------------------------------
@@ -1080,10 +1492,16 @@ with st.sidebar:
             if normalize_turkish_str(s) == normalize_turkish_str(canonical_url_param):
                 matched_student = s
                 break
-        selected_student = matched_student if matched_student else canonical_url_param
-        is_parent_mode = True
-
-        st.success(f"👤 Öğrenci: **{selected_student}** (Veli Modu)", icon="🔒")
+        
+        if matched_student:
+            selected_student = matched_student
+            is_parent_mode = True
+            st.success(f"👤 Öğrenci: **{html.escape(selected_student)}** (Veli Modu)", icon="🔒")
+        else:
+            # Geçersiz veya zararlı URL parametresine karşı güvenli varsayılan öğrenciye dön
+            selected_student = students[0] if students else "Asya"
+            is_parent_mode = False
+            st.warning("⚠️ Belirtilen öğrenci bulunamadı. Güvenlik gereği varsayılan öğrenci görüntülendi.", icon="⚠️")
     else:
         # Yönetici Modu: Tüm öğrencileri seçebilen selectbox
         is_parent_mode = False
@@ -1097,6 +1515,23 @@ with st.sidebar:
 
     # Müfredat Filtreleri
     student_records = df[df["Öğrenci"].apply(normalize_turkish_str) == normalize_turkish_str(selected_student)] if "Öğrenci" in df.columns else pd.DataFrame()
+
+    # Mini Karakter & Seviye Rozeti (Sidebar)
+    sidebar_game = calculate_gamification_profile(selected_student, student_records, df_tasks, df_obs)
+    sb_avatar_src = get_avatar_base64(sidebar_game["config"]["avatar_file"])
+    sb_avatar_html = f'<img src="{sb_avatar_src}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid {sidebar_game["config"]["border_color"]}; box-shadow: 0 0 12px {sidebar_game["config"]["glow_color"]}99;">' if sb_avatar_src else f'<div style="width: 44px; height: 44px; border-radius: 50%; background: #1e293b; display: flex; align-items: center; justify-content: center; font-size: 20px;">{sidebar_game["config"]["default_avatar_icon"]}</div>'
+
+    st.markdown(f"""
+        <div style="background: {sidebar_game['config']['gradient_card']}; border: 1px solid {sidebar_game['config']['border_color']}55; border-radius: 14px; padding: 12px 14px; margin: 4px 0 16px 0; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
+            {sb_avatar_html}
+            <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 11px; font-weight: 700; color: {sidebar_game['config']['accent_text']}; text-transform: uppercase; letter-spacing: 0.5px;">⚡ Seviye {sidebar_game['current_level']}</div>
+                <div style="font-size: 13.5px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{sidebar_game['current_title']}</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;"><b>{sidebar_game['total_xp']:,} XP</b> • %{sidebar_game['progress_pct']} İlerleme</div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
     courses = ["Tümü"] + sorted(student_records["Ders"].dropna().unique().tolist()) if "Ders" in student_records.columns else ["Tümü"]
     selected_course = st.selectbox("📚 Ders Filtresi (Müfredat)", options=courses)
 
@@ -1214,6 +1649,98 @@ st.markdown(f"""
 
 
 # ---------------------------------------------------------
+# VIP KARAKTER GELİŞİMİ & SEVİYE BARİ (HERO KART)
+# ---------------------------------------------------------
+game_profile = calculate_gamification_profile(selected_student, student_df, df_tasks, df_obs)
+avatar_src = get_avatar_base64(game_profile["config"]["avatar_file"])
+avatar_elem = f'<img src="{avatar_src}" class="gamification-avatar-img" alt="{selected_student}">' if avatar_src else f'<div class="gamification-avatar-fallback">{game_profile["config"]["default_avatar_icon"]}</div>'
+
+next_goal_text = f"Sonraki Unvana Son <b>{game_profile['needed_xp']} XP</b> Kaldı!" if game_profile['needed_xp'] > 0 else "Tebrikler! Maksimum Ustalık Seviyesindesin!"
+
+render_html(f"""
+<div class="gamification-hero-card" style="background: {game_profile['config']['gradient_card']}; border: 1px solid {game_profile['config']['border_color']}66; box-shadow: 0 16px 36px -10px rgba(0,0,0,0.7), 0 0 25px -5px {game_profile['config']['glow_color']}40;">
+    <div class="gamification-card-inner">
+        <!-- Sol: Karakter Avatarı & Seviye Rozeti -->
+        <div class="gamification-avatar-wrapper" style="border: 3px solid {game_profile['config']['border_color']}; box-shadow: 0 0 24px {game_profile['config']['glow_color']}88, 0 0 45px {game_profile['config']['glow_color']}44;">
+            {avatar_elem}
+            <div class="gamification-lvl-badge" style="background: {game_profile['config']['gradient_card']}; border: 1.5px solid {game_profile['config']['border_color']}; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                LVL {game_profile['current_level']}
+            </div>
+        </div>
+
+        <!-- Sağ / Orta: Karakter Bilgisi & Level Barı -->
+        <div class="gamification-content">
+            <div class="gamification-header-row">
+                <div>
+                    <div class="gamification-theme-tag" style="background: {game_profile['config']['badge_bg']}; border: 1px solid {game_profile['config']['badge_border']}; color: {game_profile['config']['accent_text']};">
+                        {game_profile['config']['theme_tag']}
+                    </div>
+                    <h2 class="gamification-title">
+                        {selected_student} <span style="color: {game_profile['config']['accent_text']}; font-weight: 700; font-size: 19px;">• {game_profile['current_title']}</span>
+                    </h2>
+                </div>
+                <div class="gamification-xp-pill" style="border: 1px solid {game_profile['config']['badge_border']}; background: rgba(15, 23, 42, 0.7);">
+                    <span style="color: #94a3b8; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.6px;">Toplam Kazanılan XP</span>
+                    <span class="gamification-xp-number" style="color: #ffffff;">✨ {game_profile['total_xp']:,} <span style="font-size: 13px; color: {game_profile['config']['accent_text']};">XP</span></span>
+                </div>
+            </div>
+
+            <!-- Level İlerleme Barı -->
+            <div class="gamification-bar-section">
+                <div class="gamification-bar-header">
+                    <span style="font-size: 12.5px; font-weight: 700; color: #cbd5e1; display: flex; align-items: center; gap: 6px;">
+                        ⚡ Seviye {game_profile['current_level']} İlerlemesi
+                    </span>
+                    <span style="font-size: 12.5px; font-weight: 800; color: {game_profile['config']['accent_text']};">
+                        %{game_profile['progress_pct']} Tamamlandı
+                    </span>
+                </div>
+                <div class="gamification-progress-outer">
+                    <div class="gamification-progress-fill" style="width: {game_profile['progress_pct']}%; background: {game_profile['config']['progress_gradient']}; box-shadow: 0 0 16px {game_profile['config']['glow_color']};"></div>
+                </div>
+                <div class="gamification-bar-footer">
+                    <span style="color: #94a3b8; font-size: 11.5px;">Seviye Tabanı: <b>{game_profile['min_xp']:,} XP</b></span>
+                    <span style="color: {game_profile['config']['accent_text']}; font-size: 12px; font-weight: 600;">
+                        {next_goal_text}
+                    </span>
+                    <span style="color: #94a3b8; font-size: 11.5px;">Sonraki Seviye: <b>{game_profile['max_xp']:,} XP</b></span>
+                </div>
+            </div>
+
+            <!-- Alt Bilgi & XP Kaynakları -->
+            <div class="gamification-meta-grid">
+                <div class="gamification-meta-chip">
+                    <span class="gamification-chip-icon">📘</span>
+                    <div>
+                        <div class="gamification-chip-label">Müfredat & Ustalık</div>
+                        <div class="gamification-chip-value">+{game_profile['curriculum_xp']:,} XP</div>
+                    </div>
+                </div>
+                <div class="gamification-meta-chip">
+                    <span class="gamification-chip-icon">🎯</span>
+                    <div>
+                        <div class="gamification-chip-label">Ödevler & Görevler</div>
+                        <div class="gamification-chip-value">+{game_profile['tasks_xp']:,} XP</div>
+                    </div>
+                </div>
+                <div class="gamification-meta-chip">
+                    <span class="gamification-chip-icon">💡</span>
+                    <div>
+                        <div class="gamification-chip-label">Pedagojik Takdir</div>
+                        <div class="gamification-chip-value">+{game_profile['obs_xp']:,} XP</div>
+                    </div>
+                </div>
+                <div class="gamification-tip-inline" style="border-left: 3px solid {game_profile['config']['border_color']};">
+                    <span style="font-weight: 700; color: #fbbf24;">🚀 Seviye Atlama İpucu:</span> {game_profile['config']['next_level_tip']}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+""")
+
+
+# ---------------------------------------------------------
 # ANA SEKMELER (MÜFREDAT, AKTİF GÖREVLER VE GELİŞİM GÜNLÜĞÜ)
 # ---------------------------------------------------------
 tab_mufredat, tab_gorevler, tab_gunluk = st.tabs([
@@ -1231,9 +1758,10 @@ with tab_mufredat:
     col1, col2, col3 = st.columns(3)
 
     with col1:
+        metric_grade_val = rf"{raw_grade}\. Sınıf" if str(raw_grade) != "-" else "Belirtilmedi"
         st.metric(
             label="Öğrencinin Sınıfı",
-            value=f"{grade_label}",
+            value=metric_grade_val,
             delta=sub_grade_label
         )
 
