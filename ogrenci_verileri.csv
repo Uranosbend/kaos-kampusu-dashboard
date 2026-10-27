@@ -3,7 +3,7 @@ Asya,6.0,Matematik,Sayılar ve İşlemler,Üslü İfadeler ve İşlem Önceliği
 Asya,6.0,Matematik,Sayılar ve İşlemler,Dağılma Özelliği ve Ortak Çarpan Parantezi,Orta,Başlamadı,0.0
 Asya,6.0,Matematik,Sayılar ve İşlemler,Doğal Sayı Problemleri,Kritik,Başlamadı,0.0
 Asya,6.0,Matematik,Sayılar ve İşlemler,Çarpanlar ve Katlar,Kritik,İşleniyor,50.0
-Asya,6.0,Matematik,Sayılar ve İşlemler,Bölünebilme Kuralları,Kritik,İşleniyor,50.0
+Asya,6.0,Matematik,Sayılar ve İşlemler,Bölünebilme Kuralları,Kritik,İşleniyor,65.0
 Asya,6.0,Matematik,Sayılar ve İşlemler,Asal Sayılar ve Asal Çarpanlar,Orta,Başlamadı,0.0
 Asya,6.0,Matematik,Sayılar ve İşlemler,Ortak Bölenler ve Katlar,Kritik,Başlamadı,0.0
 Asya,6.0,Matematik,Kümeler,Kümeler ve Kesişim-Birleşim,Temel,Başlamadı,0.0
@@ -69,14 +69,14 @@ Utku,8.0,Matematik,Geometri,Geometrik Cisimler,Temel,Başlamadı,0.0
 ,,,,,,,
 ,,,,,,,
 ,,,,,,,
-İpek,4.0,Matematik,Doğal Sayılar,4-5-6 Basamaklı Doğal Sayılar ve Okunuşları,Temel,İşleniyor,40.0
-İpek,4.0,Matematik,Doğal Sayılar,Basamak ve Bölük Kavramı ile Basamak Değeri,Kritik,İşleniyor,40.0
-İpek,4.0,Matematik,Doğal Sayılar,En Yakın Onluğa ve Yüzlüğe Yuvarlama,Orta,İşleniyor,60.0
-İpek,4.0,Matematik,Doğal Sayılar,Doğal Sayıları Sıralama ve Karşılaştırma,Temel,Başlamadı,0.0
-İpek,4.0,Matematik,Doğal Sayılar,Sayı ve Şekil Örüntüleri,Temel,Başlamadı,0.0
-İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Toplama İşlemi,Kritik,Başlamadı,0.0
-İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Çıkarma İşlemi,Kritik,Başlamadı,0.0
-İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Zihinden Toplama ve Çıkarma İşlemleri,Orta,Başlamadı,0.0
+İpek,4.0,Matematik,Doğal Sayılar,4-5-6 Basamaklı Doğal Sayılar ve Okunuşları,Temel,Tamamlandı,85.0
+İpek,4.0,Matematik,Doğal Sayılar,Basamak ve Bölük Kavramı ile Basamak Değeri,Kritik,Tamamlandı,70.0
+İpek,4.0,Matematik,Doğal Sayılar,En Yakın Onluğa ve Yüzlüğe Yuvarlama,Orta,Tamamlandı,80.0
+İpek,4.0,Matematik,Doğal Sayılar,Doğal Sayıları Sıralama ve Karşılaştırma,Temel,Tamamlandı,80.0
+İpek,4.0,Matematik,Doğal Sayılar,Sayı ve Şekil Örüntüleri,Temel,Tamamlandı,70.0
+İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Toplama İşlemi,Kritik,Tamamlandı,75.0
+İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Doğal Sayılarla Çıkarma İşlemi,Kritik,Tamamlandı,85.0
+İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Zihinden Toplama ve Çıkarma İşlemleri,Orta,Tamamlandı,90.0
 İpek,4.0,Matematik,Doğal Sayılarla İşlemler,Toplama ve Çıkarma Problemleri,Kritik,Başlamadı,0.0
 İpek,4.0,Matematik,Doğal Sayılarla İşlemler,En Çok Üç Basamaklı Sayılarla Çarpma İşlemi,Kritik,Başlamadı,0.0
 İpek,4.0,Matematik,Doğal Sayılarla İşlemler,10-100-1000 ile Kısa Yoldan ve Zihinden Çarpma,Orta,Başlamadı,0.0
